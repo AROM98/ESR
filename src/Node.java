@@ -1,6 +1,11 @@
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 
+
+/**
+ * Um Node será um Server e um Cliente ao mesmo tempo.
+ * não pode é receber as suas proprias mensagens xd....
+ */
 public class Node {
 
 

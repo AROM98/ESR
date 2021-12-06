@@ -4,7 +4,6 @@ import java.util.concurrent.Executors;
 public class Tpool_example {
 
 
-
     public void run(){
         // cria uma pool
         ExecutorService pool = Executors.newCachedThreadPool();
