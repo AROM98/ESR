@@ -16,10 +16,9 @@ public class Node {
             //trata dos vizinhos
         }*/
 
-        String vizinho1 = "10.0.0.1";
 
-        Cliente cliente = new Cliente("");
-        Server server = new Server("");
+        Cliente cliente = new Cliente("127.0.0.1", 6666); // recebe ip (destino) e porta
+        Server server = new Server(6666); // recebe apenas uma porta
 
         new Thread(cliente).start();
         new Thread(server).start();

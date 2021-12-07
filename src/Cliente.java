@@ -6,9 +6,14 @@ import java.net.Socket;
 
 public class Cliente implements Runnable{
 
-    //mudar args
-    public Cliente(String ip){
 
+    public String ip;
+    public int porta;
+
+    //mudar args
+    public Cliente(String ip, int porta){
+        this.ip = ip;
+        this.porta = porta;
     }
 
     public void run() {
@@ -16,13 +21,13 @@ public class Cliente implements Runnable{
         Socket clientSocket = null;
         PrintWriter out;
         BufferedReader in;
-        String msg = "o servidor é um fdp";
+        String msg = "o cliente diz OLA";
 
         /**
          *  tenta fazer a ligação.
          */
         try {
-            clientSocket = new Socket("127.0.0.1", 6666);
+            clientSocket = new Socket(ip, porta);
             out = new PrintWriter(clientSocket.getOutputStream(), true);
             in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 
@@ -38,7 +43,7 @@ public class Cliente implements Runnable{
 
 
     public static void main(String args[]){
-        Cliente cli = new Cliente("");
+        Cliente cli = new Cliente("127.0.0.1", 6666);
         cli.run();
     }
 }
