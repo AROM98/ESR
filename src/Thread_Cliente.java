@@ -5,7 +5,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
-public class Cliente implements Runnable{
+public class Thread_Cliente implements Runnable{
 
 
     public String ip;
@@ -13,13 +13,13 @@ public class Cliente implements Runnable{
     String msg;
 
     //mudar args
-    public Cliente(String ip, int porta){
+    public Thread_Cliente(String ip, int porta){
         this.ip = ip;
         this.porta = porta;
     }
 
 
-    public Cliente(String ip, int porta, String mensagem){
+    public Thread_Cliente(String ip, int porta, String mensagem){
         this.ip = ip;
         this.porta = porta;
         this.msg = mensagem;
@@ -31,12 +31,13 @@ public class Cliente implements Runnable{
         PrintWriter out;
         BufferedReader in;
 
-
         /**
          *  tenta fazer a ligação.
          */
         try {
             System.out.println("vou abrir em "+ip+":"+porta);
+            ip=ip.replace("/","");
+            System.out.println(ip);
             clientSocket = new Socket(ip, porta);
             System.out.println("Abri cli-socket em "+ip+":"+porta);
             out = new PrintWriter(clientSocket.getOutputStream(), true);
@@ -47,8 +48,8 @@ public class Cliente implements Runnable{
             /**
              * Se for preciso ficar a espera de resposta, então retirar comentario das seguintes linhas.
              */
-            String resp = in.readLine();
-            System.out.println("resposta: "+resp);
+            //String resp = in.readLine();
+            //System.out.println("resposta: "+resp);
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -1,3 +1,4 @@
+//cd /../../../home/falape/Projetos/ESR/src/
 import java.io.*;
 import java.net.InetAddress;
 import java.net.ServerSocket;
@@ -7,11 +8,14 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class Server implements Runnable{
-
+    public int flag;
+    public String ip;
     public int porta;
 
     //mudar args
-    public Server(int porta){
+    public Server(int flag, String ip, int porta){
+        this.flag=flag;
+        this.ip = ip;
         this.porta = porta;
     }
 
@@ -23,7 +27,7 @@ public class Server implements Runnable{
         ServerSocket serverSocket = null;
         Socket socket = null;
         InputStream input = null;
-        PrintWriter out;
+        PrintWriter out = null;
         InetAddress ip_origem = null;
         int porta_origem = 0;
 
@@ -34,6 +38,30 @@ public class Server implements Runnable{
             serverSocket = new ServerSocket(porta);
         } catch (IOException e) {
             e.printStackTrace();
+        }
+
+        if(flag==1){
+            Socket clientSocket = null;
+            PrintWriter out1=null;
+            BufferedReader in;
+            try {
+                System.out.println("vou abrir em "+ip+":"+porta);
+                clientSocket = new Socket(ip, porta);
+                System.out.println("Abri cli-socket em "+ip+":"+porta);
+                out1 = new PrintWriter(clientSocket.getOutputStream(), true);
+                in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+
+                out1.println("olá diz o cliente");
+
+                /**
+                 * Se for preciso ficar a espera de resposta, então retirar comentario das seguintes linhas.
+                 */
+                //String resp = in.readLine();
+                //System.out.println("resposta: "+resp);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            out1.println("olá diz o cliente");
         }
 
         while (true) {
@@ -49,7 +77,7 @@ public class Server implements Runnable{
 
                 socket = serverSocket.accept();
                 ip_origem = socket.getInetAddress(); // Guarda IP de origem
-                porta_origem = socket.getPort();
+                porta_origem = 81;
 
                 System.out.println("Client accepted from "+ ip_origem.toString());
                 System.out.println(socket.getPort());
@@ -83,7 +111,7 @@ public class Server implements Runnable{
              * Então vou criar um thread da pool (Client) para responder
              */
             // NOVA CLIENT THREAD
-            Cliente cli = new Cliente(ip_origem.toString(), porta_origem, "O servidor diz OLA");
+            Thread_Cliente cli = new Thread_Cliente(ip_origem.toString(), porta_origem, "O servidor diz OLA");
             pool.execute(cli);
             //out = new PrintWriter(socket.getOutputStream(), true);
             //out.println("O servidor diz OLA");
@@ -91,7 +119,7 @@ public class Server implements Runnable{
     }
 
     public static void main(String args[]){
-        Server svr = new Server(6666);
+        Server svr = new Server(Integer.parseInt(args[0]),args[1],81);
         svr.run();
     }
 

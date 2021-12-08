@@ -1,3 +1,4 @@
+//cd /../../../home/falape/Projetos/ESR/src/
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 
@@ -18,10 +19,10 @@ public class Node {
 
 
         Cliente cliente = new Cliente("127.0.0.1", 6666); // recebe ip (destino) e porta
-        Server server = new Server(6666); // recebe apenas uma porta
+        //Server server = new Server(6666); // recebe apenas uma porta
 
         new Thread(cliente).start();
-        new Thread(server).start();
+        //new Thread(server).start();
 
     }
 }
