@@ -9,6 +9,7 @@ public class Cliente implements Runnable{
 
     public String ip;
     public int porta;
+    String msg;
 
     //mudar args
     public Cliente(String ip, int porta){
@@ -16,25 +17,36 @@ public class Cliente implements Runnable{
         this.porta = porta;
     }
 
+
+    public Cliente(String ip, int porta, String mensagem){
+        this.ip = ip;
+        this.porta = porta;
+        this.msg = mensagem;
+    }
+
     public void run() {
 
         Socket clientSocket = null;
         PrintWriter out;
         BufferedReader in;
-        String msg = "o cliente diz OLA";
 
         /**
          *  tenta fazer a ligação.
          */
         try {
+            System.out.println("vou abrir em "+ip+":"+porta);
             clientSocket = new Socket(ip, porta);
+            System.out.println("Abri cli-socket em "+ip+":"+porta);
             out = new PrintWriter(clientSocket.getOutputStream(), true);
             in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 
-            out.println(msg);
-            String resp = in.readLine();
+            out.println("olá diz o cliente");
 
-            System.out.println("resposta: "+resp);
+            /**
+             * Se for preciso ficar a espera de resposta, então retirar comentario das seguintes linhas.
+             */
+            //String resp = in.readLine();
+            //System.out.println("resposta: "+resp);
         } catch (IOException e) {
             e.printStackTrace();
         }
