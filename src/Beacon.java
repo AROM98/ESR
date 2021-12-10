@@ -1,4 +1,4 @@
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.Socket;
 
 public class Beacon implements Runnable{
@@ -15,29 +15,23 @@ public class Beacon implements Runnable{
 
     public void run(){
 
-        Socket clientSocket = null;
-        PrintWriter out;
+        Socket clientSocket;
+        OutputStream out;
 
         try {
             System.out.println("Vou abrir em " + bootstrapper + ":" + porta);
             clientSocket = new Socket(bootstrapper,porta);
             System.out.println("Abri cli-socket em " + bootstrapper + ":" + porta);
 
-            out = new PrintWriter(clientSocket.getOutputStream(), true);
+            out = clientSocket.getOutputStream();
 
-            while (true) {
-                out.println(nodeIp + " " + 0); //flag 0 ping ao servidor
-                Thread.sleep(1000);
+            String msg = nodeIp + " " + "0"; //flag 0 ping
+            byte[] tmp = msg.getBytes();
+            ByteMessages.sendBytes(tmp, out);
 
-            }
         }
-        catch (Exception e) {
+        catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    public static void main(String[] args){
-        //beaconSender bb = new beaconSender();
-        //bb.run();
     }
 }

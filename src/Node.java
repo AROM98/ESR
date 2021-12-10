@@ -1,14 +1,8 @@
 //cd /../../../home/falape/Projetos/ESR/src/
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.Socket;
-import java.security.NoSuchAlgorithmException;
-import java.util.Scanner;
+import java.io.*;
 import java.net.InetAddress;
-
-
+import java.net.Socket;
+import java.util.Scanner;
 
 /**
  * Um Node será um Server e um Cliente ao mesmo tempo.
@@ -23,8 +17,9 @@ public class Node {
         String nodeIp = InetAddress.getLocalHost().getHostAddress();
         int porta = 6666;
 
-        Beacon beacon = new Beacon(bootstrapper,nodeIp,porta);
-        //BEACONS
+        //BEACON
+        Thread beaconThread = new Thread(new Beacon(bootstrapper,nodeIp,porta));
+        beaconThread.start();
 
         //threads para poder enviar e receber para outros nodos
 
@@ -33,7 +28,6 @@ public class Node {
         }
         else{
             bootstrapper = args[0];
-            //nodeIp = args[1];
 
             System.out.println("O bootstrapper é: " + bootstrapper);
             System.out.println("O ip do Node é: " + nodeIp);
@@ -50,29 +44,30 @@ public class Node {
                 System.out.println("Mandando pedido ao servidor para receber a stream...");
 
                 Socket clientSocket = null;
-                PrintWriter out;
+                OutputStream out;
                 BufferedReader in;
+                InputStream input = null;
 
                 try {
                     System.out.println("Vou abrir em " + bootstrapper + ":" + porta);
                     clientSocket = new Socket(bootstrapper,porta);
                     System.out.println("Abri cli-socket em " + bootstrapper + ":" + porta);
 
-                    out = new PrintWriter(clientSocket.getOutputStream(), true);
-                    in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+                    out = clientSocket.getOutputStream();
+                    input = clientSocket.getInputStream();
 
-                    out.println(nodeIp + " " + 1); //flag 1 request da stream
 
-                    /**
-                     * Se for preciso ficar a espera de resposta, então retirar comentario das seguintes linhas.
-                     */
+                    String msg = nodeIp + " " + "1";
+                    byte[] tmp = msg.getBytes();
+                    ByteMessages.sendBytes(tmp, out);
 
-                    String resp = in.readLine();
-
-                    //confirmaçao do servidor que vai mandar a stream pelo nodo X
-                    System.out.println("resposta: " + resp);
-
-                    String nodeVizinho = resp;
+                    try {
+                        tmp = ByteMessages.readBytes(input);
+                        String nodeVizinho = new String(tmp);
+                        System.out.println("nodo Vizinho: " + nodeVizinho);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
 
                     //abrir novo cliente agora a escutar do vizinho
                     //receber o resto da stream
