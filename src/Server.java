@@ -7,6 +7,9 @@ import java.net.SocketAddress;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+/**
+ * Servidor onde estão alocados os ficheiros para os clientes.
+ */
 public class Server implements Runnable{
 
     public int porta;
@@ -61,7 +64,7 @@ public class Server implements Runnable{
              *  e como exemplo vou converter para string
              */
             try {
-                byte[] tmp = readBytes(input);
+                byte[] tmp = ByteMessages.readBytes(input);
                 String data = new String(tmp);
                 System.out.println(">>> "+data);
             } catch (IOException e) {
@@ -74,29 +77,14 @@ public class Server implements Runnable{
              * Então vou criar um thread da pool (Client) para responder
              */
             // NOVA CLIENT THREAD
-            Thread_Cliente cli = new Thread_Cliente(ip_origem.toString(), porta, "O servidor diz OLA");
+            Cliente cli = new Cliente(ip_origem.toString(), porta, "O servidor diz OLA");
             pool.execute(cli);
         }
     }
 
 
-
-    public byte[] readBytes(InputStream in) throws IOException {
-        // Again, probably better to store these objects references in the support class
-        DataInputStream dis = new DataInputStream(in);
-
-        int len = dis.readInt();
-        byte[] data = new byte[len];
-        if (len > 0) {
-            dis.readFully(data);
-        }
-        return data;
-    }
-
     public static void main(String args[]){
         Server svr = new Server(81);
         svr.run();
     }
-
-
 }

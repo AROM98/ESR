@@ -6,16 +6,16 @@ import java.util.Scanner;
 
 /**
  * Um Node será um Server e um Cliente ao mesmo tempo.
- * não pode é receber as suas proprias mensagens xd....
+ * não pode é receber as suas proprias mensagens...
  */
 public class Node {
 
 
     public static void main(String[] args) throws IOException{
 
-        String bootstrapper = "";
+        String bootstrapper = "127.0.0.2";
         String nodeIp = InetAddress.getLocalHost().getHostAddress();
-        int porta = 6666;
+        int porta = 81;
 
         //BEACON
         Thread beaconThread = new Thread(new Beacon(bootstrapper,nodeIp,porta));
@@ -56,18 +56,20 @@ public class Node {
                     out = clientSocket.getOutputStream();
                     input = clientSocket.getInputStream();
 
-
+                    /**
+                     * Envia
+                     */
                     String msg = nodeIp + " " + "1";
                     byte[] tmp = msg.getBytes();
                     ByteMessages.sendBytes(tmp, out);
 
-                    try {
-                        tmp = ByteMessages.readBytes(input);
-                        String nodeVizinho = new String(tmp);
-                        System.out.println("nodo Vizinho: " + nodeVizinho);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    /**
+                     * Recebe
+                     */
+                    tmp = ByteMessages.readBytes(input);
+                    String nodeVizinho = new String(tmp);
+                    System.out.println("nodo Vizinho: " + nodeVizinho);
+
 
                     //abrir novo cliente agora a escutar do vizinho
                     //receber o resto da stream

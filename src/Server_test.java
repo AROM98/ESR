@@ -58,7 +58,7 @@ public class Server_test implements Runnable{
              *Converter a mensagem para byte[] e enviar
              */
             byte[] tmp = "COisas".getBytes();
-            sendBytes(tmp, out1);
+            ByteMessages.sendBytes(tmp, out1);
 
             /**
             * Se for preciso ficar a espera de resposta, então retirar comentario das seguintes linhas.
@@ -99,7 +99,7 @@ public class Server_test implements Runnable{
              *  e como exemplo vou converter para string
              */
             try {
-                byte[] tmp = readBytes(input);
+                byte[] tmp = ByteMessages.readBytes(input);
                 String data = new String(tmp);
                 System.out.println(">>> "+data);
             } catch (IOException e) {
@@ -113,39 +113,6 @@ public class Server_test implements Runnable{
             // NOVA CLIENT THREAD
             Thread_Cliente cli = new Thread_Cliente(ip_origem.toString(), porta_origem, "O servidor diz OLA");
             pool.execute(cli);
-        }
-    }
-
-    public byte[] readBytes(InputStream in) throws IOException {
-        // Again, probably better to store these objects references in the support class
-        DataInputStream dis = new DataInputStream(in);
-
-        int len = dis.readInt();
-        byte[] data = new byte[len];
-        if (len > 0) {
-            dis.readFully(data);
-        }
-        return data;
-    }
-
-    public void sendBytes(byte[] myByteArray, OutputStream out) throws IOException {
-        sendBytes(myByteArray, 0, myByteArray.length, out);
-    }
-
-    public void sendBytes(byte[] myByteArray, int start, int len, OutputStream out) throws IOException {
-        if (len < 0)
-            throw new IllegalArgumentException("Negative length not allowed");
-        if (start < 0 || start >= myByteArray.length)
-            throw new IndexOutOfBoundsException("Out of bounds: " + start);
-        // Other checks if needed.
-
-        // May be better to save the streams in the support class;
-        // just like the socket variable.
-        DataOutputStream dos = new DataOutputStream(out);
-
-        dos.writeInt(len);
-        if (len > 0) {
-            dos.write(myByteArray, start, len);
         }
     }
 
