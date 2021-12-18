@@ -105,8 +105,8 @@ public class bootstrapper {
         return r;
     }
 
-    //metodo auxiliar recebe um Hashmap e um Objeto que é suposto ser um Integer xD e
-    // vê se existe na hash uma key com um valor maior se sim substitui
+    //metodo auxiliar recebe um Hashmap e uma key(ip) e um Integer (level)
+    // vê se existe na hash um ip com level maior se sim substitui
     private HashMap<String, Integer> replaceIfBigger(HashMap hash, String key, Integer level){
         String aux="";
         Integer lvl=level;
