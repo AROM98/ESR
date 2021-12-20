@@ -22,15 +22,15 @@ public class Tuple<T, T1> {
     }
 
     public void setY(T1 y) {
-        this.y =y;
+        this.y = y;
     }
 
     @Override
     public String toString() {
-        return "Tuple{" +
+        return "Tuple(" +
                 "x=" + x +
                 ", y=" + y +
-                '}';
+                ')';
     }
 }
 

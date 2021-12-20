@@ -5,34 +5,18 @@ import org.json.simple.*;
 
 import java.io.FileReader;
 import java.io.Reader;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class bootstrapper {
 
     private Reader ficheiro;
     private HashMap<String, Integer> nodoID;
+    private HashMap<Integer, String> serverLigacoes;
     private HashMap<Integer, HashMap> nodos;
     private HashMap<Integer, HashMap> clientes;
     private HashMap<Integer, Tuple<Integer,HashMap>> ativos;
 
     private int Nvizinhos = 2; //Numero de vizinhos que um IP pode ter
-
-    public HashMap getNodos() {
-        return nodos;
-    }
-
-    public void setNodos(HashMap nodos) {
-        nodos = nodos;
-    }
-
-    public HashMap getClientes() {
-        return clientes;
-    }
-
-    public void setClientes(HashMap clientes) {
-        clientes = clientes;
-    }
 
     public bootstrapper(String file){
         try {
@@ -46,18 +30,27 @@ public class bootstrapper {
         this.clientes = new HashMap<>();
         this.ativos = new HashMap<>();
         this.nodoID = new HashMap<>();
+        this.serverLigacoes = new HashMap<>();
     }
+
+    public HashMap getNodos() {
+        return nodos;
+    }
+
+    public HashMap getClientes() {
+        return clientes;
+    }
+
 
     public void parser(){
         Object obj = JSONValue.parse(ficheiro);
         JSONObject objt = (JSONObject) obj;
-
         JSONArray nodos = (JSONArray) objt.get("nodos");
 
-        int n=0;
+        JSONObject server = null;
         HashMap hash;
 
-        while(n<nodos.size()){
+        for(int n=0;n<nodos.size();n++){
             HashMap ligacao = new HashMap<>();
 
             JSONObject nodo = (JSONObject) nodos.get(n);
@@ -66,8 +59,12 @@ public class bootstrapper {
 
             if(rank==1){
                 hash = this.nodos;
-            }else{
+            }else
+            if(rank==0){
                 hash = this.clientes;
+            }else{ //tratar do server
+                server=(JSONObject) nodos.get(n);
+                continue;
             }
             //tratar dos ips que o nodo pode tomar
             JSONArray ligacoes = (JSONArray) nodo.get("Connections");
@@ -88,7 +85,18 @@ public class bootstrapper {
             }
 
             hash.put(n,ligacao);
-            n++;
+        }
+
+        //tratar do server
+        if(server!=null) {
+            JSONArray ligacoes = (JSONArray) server.get("Connections");
+
+            for (int i = 0; i < ligacoes.size(); i++) {
+                JSONObject tuplo = (JSONObject) ligacoes.get(i);
+                String id = (String) tuplo.get("id");
+
+                serverLigacoes.put(nodoID.get(id),id);
+            }
         }
     }
 
@@ -146,6 +154,36 @@ public class bootstrapper {
         return aux2;
     }
 
+    //gera string json para envio ao nodo
+    private String writeLigacoes(HashMap hash){
+        JSONObject jo = new JSONObject();
+        JSONArray ja = new JSONArray();
+        for (Object key: hash.keySet()){
+            ja.add(key);
+        }
+        jo.put("Connections",ja);
+        return jo.toString();
+    }
+
+    public HashMap<String,String> getFilesToSend(){
+        HashMap r = new HashMap<String,String>();
+
+        for(Object fkey: ativos.keySet()){
+            r.put(serverLigacoes.get(fkey),writeLigacoes(ativos.get(fkey).getY()));
+        }
+
+        return r;
+    }
+
+    //Não pertence aqui, vai para o nodo
+    public void getVizinhos(String json){
+        Object obj = JSONValue.parse(json);
+        JSONObject objt = (JSONObject) obj;
+        JSONArray array = (JSONArray) objt.get("Connections");
+        for(int i=0; i<array.size(); i++){
+            System.out.println(array.get(i));
+        }
+    }
 
     //Tenho de ver o que vou returnar, pode dar jeito returnar IPS que sofreram alterações para os informar
     public void addIPativo(String ip){
@@ -178,13 +216,13 @@ public class bootstrapper {
             }
             //ATUALIZAR OS RESTANTES IPS ATIVOS PARA SABEREM DO NOVO NODO
             for(Object key: ativos.keySet()){
-                System.out.println("key:" + key + " é nó? " + ativos.get(key).getX());
+                //System.out.println("key:" + key + " é nó? " + ativos.get(key).getX());
                 if(ativos.get(key).getX()==1){ //trata-se de um nodo
-                    System.out.println("nodo: " + nodos.get(key) + " o ip q quero " + ip);
+                    //System.out.println("nodo: " + nodos.get(key) + " o ip q quero " + ip);
                     String nodoIP = containsIPNodo(nodos.get(key),ip);
-                    System.out.println("IP pertence a nodo " + nodoIP);
+                    //System.out.println("IP pertence a nodo " + nodoIP);
                     if(nodoIP != ""){
-                        System.out.println("Vai atualizar ativos");
+                        //System.out.println("Vai atualizar ativos");
                         if(ativos.get(key).getY().size()<Nvizinhos){
                             HashMap auxAtivos = ativos.get(key).getY();
                             auxAtivos.put(nodoIP, nodos.get(key).get(nodoIP));
@@ -198,10 +236,14 @@ public class bootstrapper {
     }
 
     public static void main(String[] args) {
+        System.out.println(args[0]);
         bootstrapper strapper = new bootstrapper(args[0]);
         strapper.parser();
 
-        System.out.println("Main print\nNodos:");
+        System.out.println("Main print");
+        System.out.println("Server:");
+        System.out.println(strapper.serverLigacoes);
+        System.out.println("Nodos:");
         System.out.println(strapper.nodos);
         System.out.println("Clientes:");
         System.out.println(strapper.clientes);
@@ -214,6 +256,10 @@ public class bootstrapper {
         strapper.addIPativo("10.0.2.2");  //3
 
         System.out.println(strapper.ativos);
+
+        System.out.println(strapper.getFilesToSend() + "\n");
+
+        strapper.getVizinhos(strapper.getFilesToSend().get("10.0.8.2"));
     }
 }
 
