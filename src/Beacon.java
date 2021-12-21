@@ -2,13 +2,13 @@ import java.io.*;
 import java.net.Socket;
 
 public class Beacon implements Runnable{
-    private String bootstrapper;
+    private String server;
     private String nodeIp;
     private int porta;
 
 
-    public Beacon(String bootstrapper, String nodeIp, int porta){
-        this.bootstrapper = bootstrapper;
+    public Beacon(String server, String nodeIp, int porta){
+        this.server = server;
         this.nodeIp = nodeIp;
         this.porta = porta;
     }
@@ -19,9 +19,9 @@ public class Beacon implements Runnable{
         OutputStream out;
 
         try {
-            System.out.println("Vou abrir em " + bootstrapper + ":" + porta);
-            clientSocket = new Socket(bootstrapper,porta);
-            System.out.println("Abri cli-socket em " + bootstrapper + ":" + porta);
+            System.out.println("Vou abrir em " + server + ":" + porta);
+            clientSocket = new Socket(server,porta);
+            System.out.println("Abri cli-socket em " + server + ":" + porta);
 
             out = clientSocket.getOutputStream();
 

@@ -13,23 +13,23 @@ public class Node {
 
     public static void main(String[] args) throws IOException{
 
-        String bootstrapper = "127.0.0.2";
+        String server = "127.0.0.2";
         String nodeIp = InetAddress.getLocalHost().getHostAddress();
         int porta = 81;
 
         //BEACON
-        Thread beaconThread = new Thread(new Beacon(bootstrapper,nodeIp,porta));
+        Thread beaconThread = new Thread(new Beacon(server,nodeIp,porta));
         beaconThread.start();
 
         //threads para poder enviar e receber para outros nodos
 
         if(args.length != 1){
-            System.out.println("Insira o ip do bootstrapper nos argumentos"); //e o proprio ip do node");
+            System.out.println("Insira o ip do server nos argumentos"); //e o proprio ip do node");
         }
         else{
-            bootstrapper = args[0];
+            server = args[0];
 
-            System.out.println("O bootstrapper é: " + bootstrapper);
+            System.out.println("O server é: " + server);
             System.out.println("O ip do Node é: " + nodeIp);
 
 
@@ -49,9 +49,9 @@ public class Node {
                 InputStream input = null;
 
                 try {
-                    System.out.println("Vou abrir em " + bootstrapper + ":" + porta);
-                    clientSocket = new Socket(bootstrapper,porta);
-                    System.out.println("Abri cli-socket em " + bootstrapper + ":" + porta);
+                    System.out.println("Vou abrir em " + server + ":" + porta);
+                    clientSocket = new Socket(server,porta);
+                    System.out.println("Abri cli-socket em " + server + ":" + porta);
 
                     out = clientSocket.getOutputStream();
                     input = clientSocket.getInputStream();

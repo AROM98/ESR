@@ -7,7 +7,7 @@ import java.io.FileReader;
 import java.io.Reader;
 import java.util.HashMap;
 
-public class bootstrapper {
+public class server {
 
     private Reader ficheiro;
     private HashMap<String, Integer> nodoID;
@@ -18,7 +18,7 @@ public class bootstrapper {
 
     private int Nvizinhos = 2; //Numero de vizinhos que um IP pode ter
 
-    public bootstrapper(String file){
+    public server(String file){
         try {
             this.ficheiro = new FileReader(file);
             System.out.println(ficheiro);
@@ -237,7 +237,7 @@ public class bootstrapper {
 
     public static void main(String[] args) {
         System.out.println(args[0]);
-        bootstrapper strapper = new bootstrapper(args[0]);
+        server strapper = new server(args[0]);
         strapper.parser();
 
         System.out.println("Main print");
