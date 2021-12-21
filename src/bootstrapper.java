@@ -247,19 +247,29 @@ public class bootstrapper {
         System.out.println(strapper.nodos);
         System.out.println("Clientes:");
         System.out.println(strapper.clientes);
-                                          //# nodos
+
+        //Para a rede
+        strapper.addIPativo("10.0.4.1");  //2
+        strapper.addIPativo("10.0.5.2"); //3
+        strapper.addIPativo("10.0.18.1");  //7
+        strapper.addIPativo("10.0.16.1");  //6
+        strapper.addIPativo("10.0.13.1");  //5
+        strapper.addIPativo("10.0.0.21");  //11
+
+
+         /*                                 //# nodos para a rede1
         strapper.addIPativo("10.0.7.1");  //0
         strapper.addIPativo("10.0.10.1"); //não existe
         strapper.addIPativo("10.0.1.1");  //0
         strapper.addIPativo("10.0.4.2");  //2
         strapper.addIPativo("10.0.7.2");  //1
         strapper.addIPativo("10.0.2.2");  //3
-
+*/
         System.out.println(strapper.ativos);
 
         System.out.println(strapper.getFilesToSend() + "\n");
 
-        strapper.getVizinhos(strapper.getFilesToSend().get("10.0.8.2"));
+        //strapper.getVizinhos(strapper.getFilesToSend().get("10.0.8.2"));
     }
 }
 
