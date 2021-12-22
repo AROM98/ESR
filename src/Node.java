@@ -34,7 +34,7 @@ public class Node {
             ServerSocket serverSocket = null;
             Socket socket;
             InputStream input = null;
-            InetAddress ip_origem = null;
+            InetAddress ip_origem;
 
 
             /**
@@ -131,7 +131,8 @@ public class Node {
                     String ipNodoVizinho = res[0];
                     String portaStream = res[1];
 
-                    // StreamSender + StreamReceiver juntos
+                    NodeStream ns = new NodeStream(ipNodoVizinho, Integer.parseInt(portaStream));
+
                 }
             }
         }
