@@ -21,7 +21,7 @@ public class NodeF {
         else{
 
             /**
-             * Sequência inicil do node
+             * Sequência inicial do node
              * cria uma thread de beacons para avisar que está vivo
              */
             Thread beaconThread = new Thread(new Beacon(server,nodeIp,porta));
