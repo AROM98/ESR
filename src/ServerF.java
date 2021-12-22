@@ -2,6 +2,7 @@ import java.io.*;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
@@ -140,6 +141,8 @@ public class ServerF {
         Socket socket;
         InputStream input = null;
         InetAddress ip_origem = null;
+        Socket clientSocket = null;
+        OutputStream out;
 
 
         /**
@@ -210,39 +213,41 @@ public class ServerF {
                 //tenho que iniciar a stream para esse cliente, para isso tenho que usar o bootstrapper para
                 //saber qual o caminho
                 //ao criar o stream para uma porta privada, não esquecer de verificar o seu status!!
-                // neste caso enviar pacotes com a flag 2
+                // neste caso enviar pacote com a porta da stream
 
-                try {
-                    //transforma o video em VideoStream
-                    VideoStream video = new VideoStream("movie.Mjpeg");
-                } catch (Exception e) {
-                    e.printStackTrace();
+                String videoFileName = res[1]; // se a ordem enviada for flag ++ fich
+
+                String ipNode = res[2]; // mudar
+                clientSocket = new Socket(ipNode, porta);
+                out = clientSocket.getOutputStream();
+
+                //buscar porta disponivel e meter na portaStream
+                int port = GetAvailablePort(portas);
+                String portaStream = Integer.toString(port); //porta do upd;
+                byte[] tmp = portaStream.getBytes();
+                ByteMessages.sendBytes(tmp, out);
+
+                //mandar a mensagem aos nodos intermediarios
+                ArrayList<String> trajeto = new ArrayList<>(); //trajeto do servidor ao cliente
+                for (String ipNodeInter : trajeto) {
+
+                    clientSocket = new Socket(ipNodeInter, porta);
+                    out = clientSocket.getOutputStream();
+
+                    String tmpV = portaStream + " " + ipNodeInter;
+                    tmp = tmpV.getBytes();
+                    ByteMessages.sendBytes(tmp, out);
+
                 }
-
-                String nome_file = res[1]; // se a ordem enviada for flag ++ fich
-
-
-                //ip do proximo nodo, certo?
-                Cliente cli = new Cliente("10.1.1.1", porta, "2 "+ nome_file);
-                pool.execute(cli);
+                StreamSender s = new StreamSender(videoFileName,ipNode,Integer.parseInt(portaStream));
             }
-
-
-            else if(flag == 3){
-                //3-> id ficheiro, num chunk, bytes (ambos sentidos)
-
-            }
-
             else if(flag == 4){
                 //acabar ligação (...) (ambos sentidos)
 
             }
 
             else if(flag == 5){
-                //5 -> (no cliente) termina ligação com porta do servidor (nodo(cliente) -> servidor)
-                // esta porta vem inidicada no pacote? porque a porta que encontro aqui é a 81...
-                // e não a privada que pretendo fechar..
-                int port_to_close = 70420; //temporário...
+                int port_to_close = Integer.parseInt(res[1]);
                 portas.put(port_to_close, 0); // porta passa a estar desactivada
             }
 
@@ -251,8 +256,6 @@ public class ServerF {
                 // vou atualizar informação no bootstrapper --
                 // "o que vou querer é o IP de quem apagou da cache e o id do file"
 
-
-
             }
 
             else{
@@ -260,12 +263,6 @@ public class ServerF {
                 // ou não veio alguma destas flags
                 System.out.println("alguma coisa correu mal.");
             }
-
-
         }
-
-
-
-
     }
 }

@@ -1,86 +1,138 @@
 //cd /../../../home/falape/Projetos/ESR/src/
 import java.io.*;
-import java.net.InetAddress;
-import java.net.Socket;
+import java.net.*;
 import java.util.Scanner;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
-/**
- * Um Node será um Server e um Cliente ao mesmo tempo.
- * não pode é receber as suas proprias mensagens...
- */
 public class Node {
 
+    public static void main(String args[]) throws UnknownHostException {
 
-    public static void main(String[] args) throws IOException{
-
-        String server = "127.0.0.2";
+        String server = "";
         String nodeIp = InetAddress.getLocalHost().getHostAddress();
         int porta = 81;
+        int receber_input;
 
-        //BEACON
-        Thread beaconThread = new Thread(new Beacon(server,nodeIp,porta));
-        beaconThread.start();
 
-        //threads para poder enviar e receber para outros nodos
+        if (args.length != 2) {
+            System.out.println("Insira o ip do server e flag nodo/cliente nos argumentos");
+        } else {
 
-        if(args.length != 1){
-            System.out.println("Insira o ip do server nos argumentos"); //e o proprio ip do node");
-        }
-        else{
+            /**
+             * Sequência inicial do node
+             * cria uma thread de beacons para avisar que está vivo
+             */
+            Thread beaconThread = new Thread(new Beacon(server, nodeIp, porta));
+            beaconThread.start();
+
+
+            /**
+             * Variaveis iniciais do servidor
+             */
+            ExecutorService pool = Executors.newCachedThreadPool();
+            ServerSocket serverSocket = null;
+            Socket socket;
+            InputStream input = null;
+            InetAddress ip_origem = null;
+
+
+            /**
+             * Abertura do server-socket
+             */
+            try {
+                serverSocket = new ServerSocket(porta);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
             server = args[0];
+            receber_input = Integer.parseInt(args[1]);
 
             System.out.println("O server é: " + server);
             System.out.println("O ip do Node é: " + nodeIp);
 
-
             /**
-             * Pedido de um nodo ao servidor para receber a stream
+             * servidor fica a espera de pedido permanentemente
+             * recebe input ecrito e do stream
              */
-            System.out.println("Quando quiser receber a stream escreva Y");
-            Scanner sc = new Scanner(System.in);
-            String str = sc.nextLine();
-            if(str.equals("Y")) {
 
-                System.out.println("Mandando pedido ao servidor para receber a stream...");
+            while (true) {
 
-                Socket clientSocket = null;
-                OutputStream out;
-                BufferedReader in;
-                InputStream input = null;
+                if (receber_input == 1) {
+                    System.out.println("Quando quiser receber a stream insira o nome do ficheiro:");
+                    Scanner sc = new Scanner(System.in);
+                    String str = sc.nextLine();
+                    System.out.println("Mandando pedido ao servidor para receber a stream...");
 
-                try {
-                    System.out.println("Vou abrir em " + server + ":" + porta);
-                    clientSocket = new Socket(server,porta);
-                    System.out.println("Abri cli-socket em " + server + ":" + porta);
+                    Socket clientSocket;
+                    OutputStream out;
 
-                    out = clientSocket.getOutputStream();
-                    input = clientSocket.getInputStream();
+                    try {
+                        System.out.println("Vou abrir em " + server + ":" + porta);
+                        clientSocket = new Socket(server, porta);
+                        System.out.println("Abri cli-socket em " + server + ":" + porta);
 
-                    /**
-                     * Envia
-                     */
-                    String msg = nodeIp + " " + "1";
-                    byte[] tmp = msg.getBytes();
-                    ByteMessages.sendBytes(tmp, out);
+                        out = clientSocket.getOutputStream();
+                        input = clientSocket.getInputStream();
 
-                    /**
-                     * Recebe
-                     */
-                    tmp = ByteMessages.readBytes(input);
-                    String nodeVizinho = new String(tmp);
-                    System.out.println("nodo Vizinho: " + nodeVizinho);
+                        /**
+                         * Envia request de stream
+                         */
+                        String msg = "1 " + str + " " + nodeIp;
+                        byte[] tmp = msg.getBytes();
+                        ByteMessages.sendBytes(tmp, out);
+
+                        /**
+                         * Recebe confirmaçao do servidor de onde vai receber a stream
+                         */
+                        tmp = ByteMessages.readBytes(input);
+                        String portaStream = new String(tmp);
+                        System.out.println("Porta que vou escutar" + portaStream);
+
+                        /**
+                         * Inicia a classe que recebe os pacotes da stream pelo UDP e ao mesmo tempo reproduz a stream.
+                         */
+                        VideoPlayer_Client t = new VideoPlayer_Client(Integer.parseInt(portaStream));
 
 
-                    //abrir novo cliente agora a escutar do vizinho
-                    //receber o resto da stream
+                        //pacote de reabrir a porta
+                        msg = "5 " + portaStream;
+                        tmp = msg.getBytes();
+                        ByteMessages.sendBytes(tmp, out);
 
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+
+                    try {
+                        System.out.println("À espera de informação do servidor...");
+
+                        socket = serverSocket.accept();
+                        ip_origem = socket.getInetAddress();
+
+                        System.out.println("Client accepted from " + ip_origem.toString());
+
+                        input = socket.getInputStream();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    String data = "";
+                    String[] res = new String[0];;
+                    try {
+                        byte[] tmp = ByteMessages.readBytes(input);
+                        data = new String(tmp);
+                        res = data.split(" "); //res[0] é o ip para onde mando a stream e res[1] é a porta para receber a strean
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    String ipNodoVizinho = res[0];
+                    String portaStream = res[1];
+
+                    // StreamSender + StreamReceiver juntos
                 }
-                catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-                //metodos do vlc para reproduzir a stream
-
             }
         }
     }
