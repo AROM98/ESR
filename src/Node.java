@@ -5,17 +5,20 @@ import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import static java.lang.Thread.sleep;
+
 public class Node {
 
-    public static void main(String args[]) throws UnknownHostException {
+    public static void main(String args[]) throws UnknownHostException, InterruptedException {
 
         String server = "";
-        String nodeIp = InetAddress.getLocalHost().getHostAddress();
-        int porta = 81;
+        String nodeIp = args[2];//InetAddress.getLocalHost().getHostAddress();
+        int porta = 6868;
+        int portaNode = 6869;
         int receber_input;
 
 
-        if (args.length != 2) {
+        if (args.length != 3) {
             System.out.println("Insira o ip do server e flag nodo/cliente nos argumentos");
         } else {
 
@@ -58,7 +61,7 @@ public class Node {
              */
 
             while (true) {
-
+                //sleep(10000);
                 if (receber_input == 1) {
                     System.out.println("Quando quiser receber a stream insira o nome do ficheiro:");
                     Scanner sc = new Scanner(System.in);
@@ -74,7 +77,6 @@ public class Node {
                         System.out.println("Abri cli-socket em " + server + ":" + porta);
 
                         out = clientSocket.getOutputStream();
-                        input = clientSocket.getInputStream();
 
                         /**
                          * Envia request de stream
@@ -86,9 +88,15 @@ public class Node {
                         /**
                          * Recebe confirmaçao do servidor de onde vai receber a stream
                          */
+
+                        serverSocket = new ServerSocket(portaNode);
+                        socket = serverSocket.accept();
+
+                        input = socket.getInputStream();
+
                         tmp = ByteMessages.readBytes(input);
                         String portaStream = new String(tmp);
-                        System.out.println("Porta que vou escutar" + portaStream);
+                        System.out.println("Porta que vou escutar: " + portaStream + "\n");
 
                         /**
                          * Inicia a classe que recebe os pacotes da stream pelo UDP e ao mesmo tempo reproduz a stream.

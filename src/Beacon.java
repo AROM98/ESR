@@ -23,9 +23,8 @@ public class Beacon implements Runnable{
         while(true) {
 
             try {
-                System.out.println("Vou abrir em " + server + ":" + porta);
                 clientSocket = new Socket(server, porta);
-                System.out.println("Abri cli-socket em " + server + ":" + porta);
+                System.out.println("Beacon signal " + server + ":" + porta);
 
                 out = clientSocket.getOutputStream();
 

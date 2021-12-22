@@ -1,5 +1,6 @@
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.InetAddress;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,6 +12,7 @@ public class ServerAnswerThread implements Runnable{
     private Bootstrapper bootstrapper;
     private byte[] dados;
     private int porta;
+    private int portaNode;
     private ReentrantLock lock;
     private HashMap<Integer, Integer> portas;
 
@@ -18,7 +20,8 @@ public class ServerAnswerThread implements Runnable{
      * Recebe argumentos inicias para conseguir responder
      */
     public ServerAnswerThread(Bootstrapper b, byte[] dados, HashMap<Integer, Integer> portas){
-        this.porta = 81;
+        this.porta = 6868;
+        this.portaNode = 6869;
         this.bootstrapper = b;
         this.dados = dados;
         this.portas = portas;
@@ -26,7 +29,7 @@ public class ServerAnswerThread implements Runnable{
 
     public void run() {
 
-        Integer flag = -1;
+        int flag;
         String ipNode;
         String[] res;
         String data = new String(dados);
@@ -55,12 +58,10 @@ public class ServerAnswerThread implements Runnable{
                 String ficheiro = res[1];
                 ipNode = res[2];
 
-                String videoFileName = ficheiro; // se a ordem enviada for flag ++ fich
-
-                Socket clientSocket = null;
+                Socket clientSocket;
                 OutputStream out = null;
                 try {
-                    clientSocket = new Socket(ipNode, porta);
+                    clientSocket = new Socket(ipNode, portaNode);
                     out = clientSocket.getOutputStream();
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -92,7 +93,7 @@ public class ServerAnswerThread implements Runnable{
                     }
 
                 }
-                StreamSender s = new StreamSender(videoFileName,ipNode,Integer.parseInt(portaStream));
+                StreamSender s = new StreamSender(ficheiro,ipNode,Integer.parseInt(portaStream));
                 break;
 
             case 4:

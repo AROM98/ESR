@@ -2,7 +2,6 @@ import java.io.*;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
@@ -28,10 +27,10 @@ public class Server {
      * Metedo para popular um hashmap de portas disponiveis com o seu devido estado.
      */
     public static void PopulatePorts(HashMap<Integer, Integer> portas){
-        int min_port = 70000;
+        int min_port = 50000;
 
         //encher com 30k portas disponiveis.
-        for(int i = 0; i < 30000; i++){
+        for(int i = 0; i < 5000; i++){
             portas.put(min_port, 0);
             min_port++;
         }
@@ -51,7 +50,7 @@ public class Server {
                 break;
             }
         }
-
+        System.out.println("PORTA QUE ESTA DISPONIVEL : " + res_port);
         return res_port;
     }
 
@@ -109,7 +108,7 @@ public class Server {
      *
      */
     public static void main(String[] args) throws IOException {
-        int porta = 81;
+        int porta = 6868;
         String path = "/files/";
         String path2 = "/../Rede.json";
         String path3 = "Rede1.json";
@@ -153,7 +152,6 @@ public class Server {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
 
         //System.out.println();
         //System.out.println(bootstrapper.getNodos());

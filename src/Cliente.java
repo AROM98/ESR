@@ -61,7 +61,7 @@ public class Cliente implements Runnable{
     }
 
     public static void main(String args[]){
-        Cliente cli = new Cliente("127.0.0.1", 81);
+        Cliente cli = new Cliente("127.0.0.1", 6868);
         cli.run();
     }
 }
