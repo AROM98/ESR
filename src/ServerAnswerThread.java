@@ -67,7 +67,7 @@ public class ServerAnswerThread implements Runnable{
                 }
 
                 //buscar porta disponivel e meter na portaStream
-                int port = ServerF.GetAvailablePort(portas);
+                int port = Server.GetAvailablePort(portas);
                 String portaStream = Integer.toString(port); //porta do upd;
                 byte[] tmp = portaStream.getBytes();
                 try {

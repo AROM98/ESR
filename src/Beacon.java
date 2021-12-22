@@ -34,7 +34,7 @@ public class Beacon implements Runnable{
                 ByteMessages.sendBytes(tmp, out);
 
                 sleep(10000);
-            
+
             } catch (IOException | InterruptedException e) {
                 e.printStackTrace();
             }
