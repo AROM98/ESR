@@ -173,96 +173,13 @@ public class Server {
                 e.printStackTrace();
             }
 
-
             /**
-             * Vou receber input em byte[]
-             * estou a espera de alguma coisa do genero: flag ++ ip_nodo ++ dados (dividido por ' ')
-             * vou converter os byte[] para string e fazer parse por ' ' para obter a flag
-             *
-             * isto se calhar vai mudar com a implementação dos pacotes customizados
-             * o que muda é como retiro e flag do dito cujo, a utilização da flag nao muda
+             * byte[] que chega é passado a thread que faz parse e responde consoante o caso.
              */
-            String data = "";
-            int flag = -1;
-            String[] res = new String[0];
-            try {
-                byte[] tmp = ByteMessages.readBytes(input);
-                data = new String(tmp);
-                res = data.split(" ");
-                flag = Integer.parseInt(res[0]);
-                System.out.println("flag -> " + flag); //devo obter a flag aqui
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            /**
-             * Agora o que acontece depende da flag
-             * são criadas threads da pool para responder a cada uma destas, caso seja necessário
-             */
-
-
-            if(flag == 0){
-                // 0-> beacons (nodo -> servidor)
-                // criar tabela com timestamps ? mas isto teria que ser mantido por uma thread, não?
-
-                //atualizar coisas no bootstrap, se não estou enganado!
-
-            }
-            else if(flag == 1){
-                //1-> pede stream (nodo(cliente) -> servidor)
-                //tenho que iniciar a stream para esse cliente, para isso tenho que usar o bootstrapper para
-                //saber qual o caminho
-                //ao criar o stream para uma porta privada, não esquecer de verificar o seu status!!
-                // neste caso enviar pacote com a porta da stream
-
-                String videoFileName = res[1]; // se a ordem enviada for flag ++ fich
-
-                String ipNode = res[2]; // mudar
-                clientSocket = new Socket(ipNode, porta);
-                out = clientSocket.getOutputStream();
-
-                //buscar porta disponivel e meter na portaStream
-                int port = GetAvailablePort(portas);
-                String portaStream = Integer.toString(port); //porta do upd;
-                byte[] tmp = portaStream.getBytes();
-                ByteMessages.sendBytes(tmp, out);
-
-                //mandar a mensagem aos nodos intermediarios
-                ArrayList<String> trajeto = new ArrayList<>(); //trajeto do servidor ao cliente
-                for (String ipNodeInter : trajeto) {
-
-                    clientSocket = new Socket(ipNodeInter, porta);
-                    out = clientSocket.getOutputStream();
-
-                    String tmpV = portaStream + " " + ipNodeInter;
-                    tmp = tmpV.getBytes();
-                    ByteMessages.sendBytes(tmp, out);
-
-                }
-                StreamSender s = new StreamSender(videoFileName,ipNode,Integer.parseInt(portaStream));
-            }
-            else if(flag == 4){
-                //acabar ligação (...) (ambos sentidos)
-
-            }
-
-            else if(flag == 5){
-                int port_to_close = Integer.parseInt(res[1]);
-                portas.put(port_to_close, 0); // porta passa a estar desactivada
-            }
-
-            else if(flag == 6){
-                //6-> nodo apaga ficheiro da cache (nodo -> servidor)
-                // vou atualizar informação no bootstrapper --
-                // "o que vou querer é o IP de quem apagou da cache e o id do file"
-
-            }
-
-            else{
-                // se chegou aqui é porque se calhar deu erro no parse.
-                // ou não veio alguma destas flags
-                System.out.println("alguma coisa correu mal.");
-            }
+            byte[] tmp = ByteMessages.readBytes(input);
+            ServerAnswerThread thread_tmp = new ServerAnswerThread(bootstrapper, tmp, portas);
+            pool.execute(thread_tmp);
+            
         }
     }
 }
