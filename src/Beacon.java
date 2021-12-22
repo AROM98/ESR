@@ -25,7 +25,7 @@ public class Beacon implements Runnable{
 
             out = clientSocket.getOutputStream();
 
-            String msg = nodeIp + " " + "0"; //flag 0 ping
+            String msg = "0 " + nodeIp; //flag 0 ping
             byte[] tmp = msg.getBytes();
             ByteMessages.sendBytes(tmp, out);
 
