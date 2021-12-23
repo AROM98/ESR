@@ -144,6 +144,10 @@ public class Server {
         OutputStream out;
 
 
+        beaconListener bl = new beaconListener(bootstrapper, portas);
+        pool.execute(bl);
+
+
         /**
          * Abertura do server-socket
          */
