@@ -1,20 +1,16 @@
-//cd /../../../home/falape/Projetos/ESR/src/
 import java.io.*;
 import java.net.*;
 import java.util.Scanner;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
-import static java.lang.Thread.sleep;
 
 public class Node {
 
     public static void main(String args[]) throws UnknownHostException, InterruptedException {
 
         String server = "";
-        String nodeIp = args[2];//InetAddress.getLocalHost().getHostAddress();
+        String nodeIp = args[2];
         int porta = 6868;
         int portaNode = 6869;
+        int portaBeacon = 6870;
         int receber_input;
 
 
@@ -26,15 +22,14 @@ public class Node {
              * Sequência inicial do node
              * cria uma thread de beacons para avisar que está vivo
              */
-            Thread beaconThread = new Thread(new Beacon(server, nodeIp, porta));
+            Thread beaconThread = new Thread(new Beacon(server, nodeIp, portaBeacon));
             beaconThread.start();
 
 
             /**
              * Variaveis iniciais do servidor
              */
-            ExecutorService pool = Executors.newCachedThreadPool();
-            ServerSocket serverSocket = null;
+            ServerSocket serverSocket;
             Socket socket;
             InputStream input = null;
             InetAddress ip_origem;
@@ -60,63 +55,62 @@ public class Node {
              * recebe input ecrito e do stream
              */
 
-            while (true) {
-                //sleep(10000);
-                if (receber_input == 1) {
-                    System.out.println("Quando quiser receber a stream insira o nome do ficheiro:");
-                    Scanner sc = new Scanner(System.in);
-                    String str = sc.nextLine();
-                    System.out.println("Mandando pedido ao servidor para receber a stream...");
+            if (receber_input == 1) {
+                System.out.println("Quando quiser receber a stream insira o nome do ficheiro:");
+                Scanner sc = new Scanner(System.in);
+                String str = sc.nextLine();
+                System.out.println("Mandando pedido ao servidor para receber a stream...");
 
-                    Socket clientSocket;
-                    OutputStream out;
+                Socket clientSocket;
+                OutputStream out;
 
-                    try {
-                        System.out.println("Vou abrir em " + server + ":" + porta);
-                        clientSocket = new Socket(server, porta);
-                        System.out.println("Abri cli-socket em " + server + ":" + porta);
+                try {
+                    System.out.println("Vou abrir em " + server + ":" + porta);
+                    clientSocket = new Socket(server, porta);
+                    System.out.println("Abri cli-socket em " + server + ":" + porta);
 
-                        out = clientSocket.getOutputStream();
+                    out = clientSocket.getOutputStream();
 
-                        /**
-                         * Envia request de stream
-                         */
-                        String msg = "1 " + str + " " + nodeIp;
-                        byte[] tmp = msg.getBytes();
-                        ByteMessages.sendBytes(tmp, out);
+                    /**
+                     * Envia request de stream
+                     */
+                    String msg = "1 " + str + " " + nodeIp;
+                    byte[] tmp = msg.getBytes();
+                    ByteMessages.sendBytes(tmp, out);
 
-                        /**
-                         * Recebe confirmaçao do servidor de onde vai receber a stream
-                         */
+                    /**
+                     * Recebe confirmaçao do servidor de onde vai receber a stream
+                     */
 
-                        serverSocket = new ServerSocket(portaNode);
-                        socket = serverSocket.accept();
+                    serverSocket = new ServerSocket(portaNode);
+                    socket = serverSocket.accept();
 
-                        input = socket.getInputStream();
+                    input = socket.getInputStream();
 
-                        tmp = ByteMessages.readBytes(input);
-                        String portaStream = new String(tmp);
-                        System.out.println("Porta que vou escutar: " + portaStream + "\n");
+                    tmp = ByteMessages.readBytes(input);
+                    String portaStream = new String(tmp);
+                    System.out.println("Porta que vou escutar: " + portaStream + "\n");
 
-                        /**
-                         * Inicia a classe que recebe os pacotes da stream pelo UDP e ao mesmo tempo reproduz a stream.
-                         */
-                        VideoPlayer_Client t = new VideoPlayer_Client(Integer.parseInt(portaStream));
+                    /**
+                     * Inicia a classe que recebe os pacotes da stream pelo UDP e ao mesmo tempo reproduz a stream.
+                     */
+                    VideoPlayer_Client t = new VideoPlayer_Client(Integer.parseInt(portaStream));
 
 
-                        //pacote de reabrir a porta
-                        msg = "5 " + portaStream;
-                        tmp = msg.getBytes();
-                        ByteMessages.sendBytes(tmp, out);
+                    //pacote de reabrir a porta
+                    msg = "5 " + portaStream;
+                    tmp = msg.getBytes();
+                    ByteMessages.sendBytes(tmp, out);
 
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                } else {
-
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                while (true) {
                     try {
                         System.out.println("À espera de informação do servidor...");
 
+                        serverSocket = new ServerSocket(portaNode);
                         socket = serverSocket.accept();
                         ip_origem = socket.getInetAddress();
 
@@ -127,7 +121,7 @@ public class Node {
                         e.printStackTrace();
                     }
 
-                    String data = "";
+                    String data;
                     String[] res = new String[0];;
                     try {
                         byte[] tmp = ByteMessages.readBytes(input);

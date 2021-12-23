@@ -58,7 +58,7 @@ public class StreamSender extends JFrame implements ActionListener {
         try {
             RTPsocket = new DatagramSocket(); //init RTP socket
             ClientIPAddr = InetAddress.getByName(ipNode);
-            System.out.println("Servidor: socket " + ClientIPAddr);
+
             video = new VideoStream(VideoFileName); //init the VideoStream object:
             System.out.println("Servidor: vai enviar video do file " + VideoFileName);
 
@@ -111,10 +111,10 @@ public class StreamSender extends JFrame implements ActionListener {
                 //send the packet as a DatagramPacket over the UDP socket
                 senddp = new DatagramPacket(packet_bits, packet_length, ClientIPAddr, RTP_dest_port);
                 RTPsocket.send(senddp);
-
+/*
                 System.out.println("Send frame #"+imagenb);
                 //print the header bitstream
-                rtp_packet.printheader();
+                rtp_packet.printheader();*/
 
                 //update GUI
                 //label.setText("Send frame #" + imagenb);

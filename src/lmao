@@ -1,0 +1,113 @@
+O server é: 10.0.4.10
+O ip do Node é: 10.0.3.21
+Quando quiser receber a stream insira o nome do ficheiro:
+Beacon signal :6868
+Mandando pedido ao servidor para receber a stream...
+Vou abrir em 10.0.4.10:6868
+Abri cli-socket em 10.0.4.10:6868
+Porta que vou escutar: 50000
+
+Play Button pressed !
+Got RTP packet with SeqNum # 2 TimeStamp 200 ms, of type 26
+[RTP-Header] Version: 2, Padding: 0, Extension: 0, CC: 0, Marker: 0, PayloadType: 26, SequenceNumber: 2, TimeStamp: 200
+Got RTP packet with SeqNum # 3 TimeStamp 300 ms, of type 26
+[RTP-Header] Version: 2, Padding: 0, Extension: 0, CC: 0, Marker: 0, PayloadType: 26, SequenceNumber: 3, TimeStamp: 300
+Got RTP packet with SeqNum # 4 TimeStamp 400 ms, of type 26
+[RTP-Header] Version: 2, Padding: 0, Extension: 0, CC: 0, Marker: 0, PayloadType: 26, SequenceNumber: 4, TimeStamp: 400
+Got RTP packet with SeqNum # 5 TimeStamp 500 ms, of type 26
+[RTP-Header] Version: 2, Padding: 0, Extension: 0, CC: 0, Marker: 0, PayloadType: 26, SequenceNumber: 5, TimeStamp: 500
+Got RTP packet with SeqNum # 6 TimeStamp 600 ms, of type 26
+[RTP-Header] Version: 2, Padding: 0, Extension: 0, CC: 0, Marker: 0, PayloadType: 26, SequenceNumber: 6, TimeStamp: 600
+Got RTP packet with SeqNum # 7 TimeStamp 700 ms, of type 26
+[RTP-Header] Version: 2, Padding: 0, Extension: 0, CC: 0, Marker: 0, PayloadType: 26, SequenceNumber: 7, TimeStamp: 700
+Got RTP packet with SeqNum # 8 TimeStamp 800 ms, of type 26
+[RTP-Header] Version: 2, Padding: 0, Extension: 0, CC: 0, Marker: 0, PayloadType: 26, SequenceNumber: 8, TimeStamp: 800
+Got RTP packet with SeqNum # 9 TimeStamp 900 ms, of type 26
+[RTP-Header] Version: 2, Padding: 0, Extension: 0, CC: 0, Marker: 0, PayloadType: 26, SequenceNumber: 9, TimeStamp: 900
+Got RTP packet with SeqNum # 10 TimeStamp 1000 ms, of type 26
+[RTP-Header] Version: 2, Padding: 0, Extension: 0, CC: 0, Marker: 0, PayloadType: 26, SequenceNumber: 10, TimeStamp: 1000
+Got RTP packet with SeqNum # 11 TimeStamp 1100 ms, of type 26
+[RTP-Header] Version: 2, Padding: 0, Extension: 0, CC: 0, Marker: 0, PayloadType: 26, SequenceNumber: 11, TimeStamp: 1100
+Got RTP packet with SeqNum # 12 TimeStamp 1200 ms, of type 26
+[RTP-Header] Version: 2, Padding: 0, Extension: 0, CC: 0, Marker: 0, PayloadType: 26, SequenceNumber: 12, TimeStamp: 1200
+Got RTP packet with SeqNum # 13 TimeStamp 1300 ms, of type 26
+[RTP-Header] Version: 2, Padding: 0, Extension: 0, CC: 0, Marker: 0, PayloadType: 26, SequenceNumber: 13, TimeStamp: 1300
+Got RTP packet with SeqNum # 14 TimeStamp 1400 ms, of type 26
+[RTP-Header] Version: 2, Padding: 0, Extension: 0, CC: 0, Marker: 0, PayloadType: 26, SequenceNumber: 14, TimeStamp: 1400
+Got RTP packet with SeqNum # 15 TimeStamp 1500 ms, of type 26
+[RTP-Header] Version: 2, Padding: 0, Extension: 0, CC: 0, Marker: 0, PayloadType: 26, SequenceNumber: 15, TimeStamp: 1500
+Got RTP packet with SeqNum # 16 TimeStamp 1600 ms, of type 26
+[RTP-Header] Version: 2, Padding: 0, Extension: 0, CC: 0, Marker: 0, PayloadType: 26, SequenceNumber: 16, TimeStamp: 1600
+Got RTP packet with SeqNum # 17 TimeStamp 1700 ms, of type 26
+[RTP-Header] Version: 2, Padding: 0, Extension: 0, CC: 0, Marker: 0, PayloadType: 26, SequenceNumber: 17, TimeStamp: 1700
+Got RTP packet with SeqNum # 18 TimeStamp 1800 ms, of type 26
+[RTP-Header] Version: 2, Padding: 0, Extension: 0, CC: 0, Marker: 0, PayloadType: 26, SequenceNumber: 18, TimeStamp: 1800
+Got RTP packet with SeqNum # 19 TimeStamp 1900 ms, of type 26
+[RTP-Header] Version: 2, Padding: 0, Extension: 0, CC: 0, Marker: 0, PayloadType: 26, SequenceNumber: 19, TimeStamp: 1900
+Got RTP packet with SeqNum # 20 TimeStamp 2000 ms, of type 26
+[RTP-Header] Version: 2, Padding: 0, Extension: 0, CC: 0, Marker: 0, PayloadType: 26, SequenceNumber: 20, TimeStamp: 2000
+Got RTP packet with SeqNum # 21 TimeStamp 2100 ms, of type 26
+[RTP-Header] Version: 2, Padding: 0, Extension: 0, CC: 0, Marker: 0, PayloadType: 26, SequenceNumber: 21, TimeStamp: 2100
+Got RTP packet with SeqNum # 22 TimeStamp 2200 ms, of type 26
+[RTP-Header] Version: 2, Padding: 0, Extension: 0, CC: 0, Marker: 0, PayloadType: 26, SequenceNumber: 22, TimeStamp: 2200
+Got RTP packet with SeqNum # 23 TimeStamp 2300 ms, of type 26
+[RTP-Header] Version: 2, Padding: 0, Extension: 0, CC: 0, Marker: 0, PayloadType: 26, SequenceNumber: 23, TimeStamp: 2300
+Got RTP packet with SeqNum # 24 TimeStamp 2400 ms, of type 26
+[RTP-Header] Version: 2, Padding: 0, Extension: 0, CC: 0, Marker: 0, PayloadType: 26, SequenceNumber: 24, TimeStamp: 2400
+Got RTP packet with SeqNum # 25 TimeStamp 2500 ms, of type 26
+[RTP-Header] Version: 2, Padding: 0, Extension: 0, CC: 0, Marker: 0, PayloadType: 26, SequenceNumber: 25, TimeStamp: 2500
+Got RTP packet with SeqNum # 26 TimeStamp 2600 ms, of type 26
+[RTP-Header] Version: 2, Padding: 0, Extension: 0, CC: 0, Marker: 0, PayloadType: 26, SequenceNumber: 26, TimeStamp: 2600
+Got RTP packet with SeqNum # 27 TimeStamp 2700 ms, of type 26
+[RTP-Header] Version: 2, Padding: 0, Extension: 0, CC: 0, Marker: 0, PayloadType: 26, SequenceNumber: 27, TimeStamp: 2700
+Got RTP packet with SeqNum # 28 TimeStamp 2800 ms, of type 26
+[RTP-Header] Version: 2, Padding: 0, Extension: 0, CC: 0, Marker: 0, PayloadType: 26, SequenceNumber: 28, TimeStamp: 2800
+Got RTP packet with SeqNum # 29 TimeStamp 2900 ms, of type 26
+[RTP-Header] Version: 2, Padding: 0, Extension: 0, CC: 0, Marker: 0, PayloadType: 26, SequenceNumber: 29, TimeStamp: 2900
+Got RTP packet with SeqNum # 30 TimeStamp 3000 ms, of type 26
+[RTP-Header] Version: 2, Padding: 0, Extension: 0, CC: 0, Marker: 0, PayloadType: 26, SequenceNumber: 30, TimeStamp: 3000
+Got RTP packet with SeqNum # 31 TimeStamp 3100 ms, of type 26
+[RTP-Header] Version: 2, Padding: 0, Extension: 0, CC: 0, Marker: 0, PayloadType: 26, SequenceNumber: 31, TimeStamp: 3100
+Got RTP packet with SeqNum # 32 TimeStamp 3200 ms, of type 26
+[RTP-Header] Version: 2, Padding: 0, Extension: 0, CC: 0, Marker: 0, PayloadType: 26, SequenceNumber: 32, TimeStamp: 3200
+Got RTP packet with SeqNum # 33 TimeStamp 3300 ms, of type 26
+[RTP-Header] Version: 2, Padding: 0, Extension: 0, CC: 0, Marker: 0, PayloadType: 26, SequenceNumber: 33, TimeStamp: 3300
+Got RTP packet with SeqNum # 34 TimeStamp 3400 ms, of type 26
+[RTP-Header] Version: 2, Padding: 0, Extension: 0, CC: 0, Marker: 0, PayloadType: 26, SequenceNumber: 34, TimeStamp: 3400
+Got RTP packet with SeqNum # 35 TimeStamp 3500 ms, of type 26
+[RTP-Header] Version: 2, Padding: 0, Extension: 0, CC: 0, Marker: 0, PayloadType: 26, SequenceNumber: 35, TimeStamp: 3500
+Got RTP packet with SeqNum # 36 TimeStamp 3600 ms, of type 26
+[RTP-Header] Version: 2, Padding: 0, Extension: 0, CC: 0, Marker: 0, PayloadType: 26, SequenceNumber: 36, TimeStamp: 3600
+Got RTP packet with SeqNum # 37 TimeStamp 3700 ms, of type 26
+[RTP-Header] Version: 2, Padding: 0, Extension: 0, CC: 0, Marker: 0, PayloadType: 26, SequenceNumber: 37, TimeStamp: 3700
+Got RTP packet with SeqNum # 38 TimeStamp 3800 ms, of type 26
+[RTP-Header] Version: 2, Padding: 0, Extension: 0, CC: 0, Marker: 0, PayloadType: 26, SequenceNumber: 38, TimeStamp: 3800
+Got RTP packet with SeqNum # 39 TimeStamp 3900 ms, of type 26
+[RTP-Header] Version: 2, Padding: 0, Extension: 0, CC: 0, Marker: 0, PayloadType: 26, SequenceNumber: 39, TimeStamp: 3900
+Got RTP packet with SeqNum # 40 TimeStamp 4000 ms, of type 26
+[RTP-Header] Version: 2, Padding: 0, Extension: 0, CC: 0, Marker: 0, PayloadType: 26, SequenceNumber: 40, TimeStamp: 4000
+Got RTP packet with SeqNum # 41 TimeStamp 4100 ms, of type 26
+[RTP-Header] Version: 2, Padding: 0, Extension: 0, CC: 0, Marker: 0, PayloadType: 26, SequenceNumber: 41, TimeStamp: 4100
+Got RTP packet with SeqNum # 42 TimeStamp 4200 ms, of type 26
+[RTP-Header] Version: 2, Padding: 0, Extension: 0, CC: 0, Marker: 0, PayloadType: 26, SequenceNumber: 42, TimeStamp: 4200
+Got RTP packet with SeqNum # 43 TimeStamp 4300 ms, of type 26
+[RTP-Header] Version: 2, Padding: 0, Extension: 0, CC: 0, Marker: 0, PayloadType: 26, SequenceNumber: 43, TimeStamp: 4300
+Got RTP packet with SeqNum # 44 TimeStamp 4400 ms, of type 26
+[RTP-Header] Version: 2, Padding: 0, Extension: 0, CC: 0, Marker: 0, PayloadType: 26, SequenceNumber: 44, TimeStamp: 4400
+Got RTP packet with SeqNum # 45 TimeStamp 4500 ms, of type 26
+[RTP-Header] Version: 2, Padding: 0, Extension: 0, CC: 0, Marker: 0, PayloadType: 26, SequenceNumber: 45, TimeStamp: 4500
+Got RTP packet with SeqNum # 46 TimeStamp 4600 ms, of type 26
+[RTP-Header] Version: 2, Padding: 0, Extension: 0, CC: 0, Marker: 0, PayloadType: 26, SequenceNumber: 46, TimeStamp: 4600
+Got RTP packet with SeqNum # 47 TimeStamp 4700 ms, of type 26
+[RTP-Header] Version: 2, Padding: 0, Extension: 0, CC: 0, Marker: 0, PayloadType: 26, SequenceNumber: 47, TimeStamp: 4700
+Got RTP packet with SeqNum # 48 TimeStamp 4800 ms, of type 26
+[RTP-Header] Version: 2, Padding: 0, Extension: 0, CC: 0, Marker: 0, PayloadType: 26, SequenceNumber: 48, TimeStamp: 4800
+Got RTP packet with SeqNum # 49 TimeStamp 4900 ms, of type 26
+[RTP-Header] Version: 2, Padding: 0, Extension: 0, CC: 0, Marker: 0, PayloadType: 26, SequenceNumber: 49, TimeStamp: 4900
+Got RTP packet with SeqNum # 50 TimeStamp 5000 ms, of type 26
+[RTP-Header] Version: 2, Padding: 0, Extension: 0, CC: 0, Marker: 0, PayloadType: 26, SequenceNumber: 50, TimeStamp: 5000
+Got RTP packet with SeqNum # 51 TimeStamp 5100 ms, of type 26
+[RTP-Header] Version: 2, Padding: 0, Extension: 0, CC: 0, Marker: 0, PayloadType: 26, SequenceNumber: 51, TimeStamp: 5100
+Got RTP packet with SeqNum # 52 TimeStamp 5200 ms, of type 26
+[RTP-Header] Version: 2, Padding: 0, Extension: 0, CC: 0, Marker: 0, PayloadType: 26, SequenceNumber: 52, TimeStamp: 5200
+Teardown Button pressed !

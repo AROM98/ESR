@@ -58,7 +58,7 @@ public class ServerAnswerThread implements Runnable{
                 String ficheiro = res[1];
                 ipNode = res[2];
 
-                Socket clientSocket;
+                Socket clientSocket = null;
                 OutputStream out = null;
                 try {
                     clientSocket = new Socket(ipNode, portaNode);
@@ -76,9 +76,10 @@ public class ServerAnswerThread implements Runnable{
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-
+/*
                 //mandar a mensagem aos nodos intermediarios
                 ArrayList<String> trajeto = new ArrayList<>(); //trajeto do servidor ao cliente
+                trajeto.add("10.0.18.1");
                 for (String ipNodeInter : trajeto) {
 
                     try {
@@ -91,9 +92,16 @@ public class ServerAnswerThread implements Runnable{
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-
-                }
+                }*/
                 StreamSender s = new StreamSender(ficheiro,ipNode,Integer.parseInt(portaStream));
+
+                System.out.println("Acabou a stream");
+                try {
+                    clientSocket.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
                 break;
 
             case 4:
@@ -104,6 +112,7 @@ public class ServerAnswerThread implements Runnable{
                 lock.lock();
                 int port_to_close = Integer.parseInt(res[1]);
                 portas.put(port_to_close, 0); // porta passa a estar desactivada
+                System.out.println("Desbloquei a porta: " + port_to_close);
                 lock.unlock();
                 break;
 

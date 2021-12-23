@@ -89,7 +89,7 @@ public class VideoPlayer_Client {
         try {
             // socket e video
             RTPsocket = new DatagramSocket(RTP_RCV_PORT); //init RTP socket (o mesmo para o cliente e servidor)
-            RTPsocket.setSoTimeout(1000); // setimeout to 1s
+            RTPsocket.setSoTimeout(100); // setimeout to 1s
         } catch (SocketException e) {
             System.out.println("Cliente: erro no socket: " + e.getMessage());
         }
