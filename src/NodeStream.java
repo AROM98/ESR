@@ -26,7 +26,7 @@ public class NodeStream {
     DatagramPacket senddp; //UDP packet containing the video frames (to send)
     DatagramSocket RTPsocketReceiver; //socket to be used to send and receive UDP packet
     DatagramSocket RTPsocketSender; //socket to be used to send and receive UDP packet
-    static int RTP_PORT = 25000; //port where the client will receive the RTP packets
+    int RTP_PORT; //port where the client will receive the RTP packets
 
     Timer nTimer; //timer used to receive data from the UDP socket and send it to a neighbour node
     byte[] dBuf; //buffer used to store data received from the server
@@ -37,6 +37,7 @@ public class NodeStream {
     //--------------------------
     public NodeStream(String ipNodoVizinho, int portaStream){
 
+
         RTP_PORT = portaStream;
 
         //init para a parte do cliente
@@ -45,7 +46,6 @@ public class NodeStream {
         nTimer.setInitialDelay(0);
         nTimer.setCoalesce(true);
         dBuf = new byte[15000]; //allocate enough memory for the buffer used to receive data from the server
-
 
         try {
             RTPsocketSender = new DatagramSocket(); //init RTP socket
@@ -61,7 +61,7 @@ public class NodeStream {
         try {
             // socket e video
             RTPsocketReceiver = new DatagramSocket(RTP_PORT); //init RTP socket (o mesmo para o cliente e servidor)
-            RTPsocketReceiver.setSoTimeout(5); // setimeout to 5ms
+            RTPsocketReceiver.setSoTimeout(5000); // setimeout to 5s
         } catch (SocketException e) {
             System.out.println("Cliente: erro no socket: " + e.getMessage());
         }

@@ -81,7 +81,7 @@ public class VideoPlayer_Client {
 
         //init para a parte do cliente
         //--------------------------
-        cTimer = new Timer(20, new clientTimerListener());
+        cTimer = new Timer(10, new clientTimerListener());
         cTimer.setInitialDelay(0);
         cTimer.setCoalesce(true);
         cBuf = new byte[15000]; //allocate enough memory for the buffer used to receive data from the server
@@ -89,7 +89,7 @@ public class VideoPlayer_Client {
         try {
             // socket e video
             RTPsocket = new DatagramSocket(RTP_RCV_PORT); //init RTP socket (o mesmo para o cliente e servidor)
-            RTPsocket.setSoTimeout(100); // setimeout to 1s
+            RTPsocket.setSoTimeout(5000); // setimeout to 5s
         } catch (SocketException e) {
             System.out.println("Cliente: erro no socket: " + e.getMessage());
         }

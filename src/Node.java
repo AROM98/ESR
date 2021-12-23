@@ -4,7 +4,7 @@ import java.util.Scanner;
 
 public class Node {
 
-    public static void main(String args[]) throws UnknownHostException, InterruptedException {
+    public static void main(String args[]) throws UnknownHostException {
 
         String server = "";
         String nodeIp = args[2];
@@ -22,8 +22,8 @@ public class Node {
              * Sequência inicial do node
              * cria uma thread de beacons para avisar que está vivo
              */
-            Thread beaconThread = new Thread(new Beacon(server, nodeIp, portaBeacon));
-            beaconThread.start();
+         /*   Thread beaconThread = new Thread(new Beacon(server, nodeIp, portaBeacon));
+            beaconThread.start();*/
 
 
             /**
@@ -98,6 +98,11 @@ public class Node {
 
 
                     //pacote de reabrir a porta
+                    System.out.println("Vou abrir em " + server + ":" + porta);
+                    clientSocket = new Socket(server, porta);
+                    System.out.println("Abri cli-socket em " + server + ":" + porta);
+
+                    out = clientSocket.getOutputStream();
                     msg = "5 " + portaStream;
                     tmp = msg.getBytes();
                     ByteMessages.sendBytes(tmp, out);
@@ -122,16 +127,17 @@ public class Node {
                     }
 
                     String data;
-                    String[] res = new String[0];;
+                    String[] res = new String[0];
                     try {
                         byte[] tmp = ByteMessages.readBytes(input);
                         data = new String(tmp);
-                        res = data.split(" "); //res[0] é o ip para onde mando a stream e res[1] é a porta para receber a strean
+                        res = data.split(" "); //res[0] é a porta para receber a stream e res[1] é o ip para onde mando a stream
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    String ipNodoVizinho = res[0];
-                    String portaStream = res[1];
+
+                    String portaStream = res[0];
+                    String ipNodoVizinho = res[1];
 
                     NodeStream ns = new NodeStream(ipNodoVizinho, Integer.parseInt(portaStream));
 

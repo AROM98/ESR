@@ -52,8 +52,6 @@ public class ServerAnswerThread implements Runnable{
                 //1-> pede stream (nodo(cliente) -> servidor)
                 //tenho que iniciar a stream para esse cliente, para isso tenho que usar o bootstrapper para
                 //saber qual o caminho
-                //ao criar o stream para uma porta privada, não esquecer de verificar o seu status!!
-                // neste caso enviar pacote com a porta da stream
 
                 String ficheiro = res[1];
                 ipNode = res[2];
@@ -76,25 +74,26 @@ public class ServerAnswerThread implements Runnable{
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-/*
+
                 //mandar a mensagem aos nodos intermediarios
                 ArrayList<String> trajeto = new ArrayList<>(); //trajeto do servidor ao cliente
                 trajeto.add("10.0.18.1");
                 for (String ipNodeInter : trajeto) {
 
                     try {
-                        clientSocket = new Socket(ipNodeInter, porta);
+                        clientSocket = new Socket(ipNodeInter, portaNode);
                         out = clientSocket.getOutputStream();
 
-                        String tmpV = portaStream + " " + ipNodeInter;
+                        String tmpV = portaStream + " " + ipNode;
                         tmp = tmpV.getBytes();
                         ByteMessages.sendBytes(tmp, out);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                }*/
-                StreamSender s = new StreamSender(ficheiro,ipNode,Integer.parseInt(portaStream));
-
+                }
+                trajeto.add(ipNode);
+                StreamSender s = new StreamSender(ficheiro,trajeto.get(0),Integer.parseInt(portaStream));
+                trajeto.clear();
                 System.out.println("Acabou a stream");
                 try {
                     clientSocket.close();
@@ -109,11 +108,11 @@ public class ServerAnswerThread implements Runnable{
 
                 break;
             case 5:
-                lock.lock();
+                //lock.lock();
                 int port_to_close = Integer.parseInt(res[1]);
                 portas.put(port_to_close, 0); // porta passa a estar desactivada
                 System.out.println("Desbloquei a porta: " + port_to_close);
-                lock.unlock();
+                //lock.unlock();
                 break;
 
             case 6:
