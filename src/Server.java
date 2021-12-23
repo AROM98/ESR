@@ -109,11 +109,9 @@ public class Server {
      */
     public static void main(String[] args) throws IOException {
         int porta = 6868;
-        String path = "/files/";
         String path2 = "/../Rede.json";
         String path3 = "Rede1.json";
 
-        Integer porta_counter = 0;
         Integer file_id = 0;
 
         HashMap<String, Integer> ficheiros = new HashMap<>();
@@ -139,10 +137,7 @@ public class Server {
         ServerSocket serverSocket = null;
         Socket socket;
         InputStream input = null;
-        InetAddress ip_origem = null;
-        Socket clientSocket = null;
-        OutputStream out;
-
+        InetAddress ip_origem;
 
         beaconListener bl = new beaconListener(bootstrapper, portas);
         pool.execute(bl);

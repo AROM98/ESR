@@ -24,7 +24,7 @@ public class Cliente implements Runnable{
 
     public void run() {
 
-        Socket clientSocket = null;
+        Socket clientSocket;
         OutputStream out;
         InputStream in;
 
@@ -45,8 +45,6 @@ public class Cliente implements Runnable{
              */
             byte[] tmp = msg.getBytes();
             ByteMessages.sendBytes(tmp, out);
-
-            //out.println("olá diz o cliente");
 
             /**
              * Se for preciso ficar a espera de resposta, então retirar comentario das seguintes linhas.

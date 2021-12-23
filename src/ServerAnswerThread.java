@@ -1,10 +1,8 @@
 import java.io.IOException;
 import java.io.OutputStream;
-import java.net.InetAddress;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.concurrent.locks.ReentrantLock;
 
 public class ServerAnswerThread implements Runnable{
 
@@ -13,7 +11,6 @@ public class ServerAnswerThread implements Runnable{
     private byte[] dados;
     private int porta;
     private int portaNode;
-    private ReentrantLock lock;
     private HashMap<Integer, Integer> portas;
 
     /**
@@ -35,7 +32,6 @@ public class ServerAnswerThread implements Runnable{
         String data = new String(dados);
         res = data.split(" ");
         flag = Integer.parseInt(res[0]);
-        //System.out.println("flag -> " + flag); //devo obter a flag aqui
 
         switch (flag){
             case 0 :
@@ -43,7 +39,6 @@ public class ServerAnswerThread implements Runnable{
                 // criar tabela com timestamps ? mas isto teria que ser mantido por uma thread, não?
                 //atualizar coisas no bootstrap, se não estou enganado!
                 ipNode = res[1];
-
 
 
                 break;
@@ -77,29 +72,25 @@ public class ServerAnswerThread implements Runnable{
 
                 //mandar a mensagem aos nodos intermediarios
                 ArrayList<String> trajeto = new ArrayList<>(); //trajeto do servidor ao cliente
+                trajeto.add("10.0.4.1");
                 trajeto.add("10.0.18.1");
-                for (String ipNodeInter : trajeto) {
+                trajeto.add(ipNode);
 
+                for (int i = 0; i < trajeto.size() - 1; i++){
                     try {
-                        clientSocket = new Socket(ipNodeInter, portaNode);
+                        clientSocket = new Socket(trajeto.get(i), portaNode);
                         out = clientSocket.getOutputStream();
 
-                        String tmpV = portaStream + " " + ipNode;
+                        String tmpV = portaStream + " " + trajeto.get(i+1);
                         tmp = tmpV.getBytes();
                         ByteMessages.sendBytes(tmp, out);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }
-                trajeto.add(ipNode);
+
                 StreamSender s = new StreamSender(ficheiro,trajeto.get(0),Integer.parseInt(portaStream));
                 trajeto.clear();
-                System.out.println("Acabou a stream");
-                try {
-                    clientSocket.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
 
                 break;
 
@@ -108,11 +99,9 @@ public class ServerAnswerThread implements Runnable{
 
                 break;
             case 5:
-                //lock.lock();
                 int port_to_close = Integer.parseInt(res[1]);
                 portas.put(port_to_close, 0); // porta passa a estar desactivada
                 System.out.println("Desbloquei a porta: " + port_to_close);
-                //lock.unlock();
                 break;
 
             case 6:

@@ -4,7 +4,7 @@ import java.util.Scanner;
 
 public class Node {
 
-    public static void main(String args[]) throws UnknownHostException {
+    public static void main(String args[]) throws IOException {
 
         String server = "";
         String nodeIp = args[2];
@@ -111,11 +111,11 @@ public class Node {
                     e.printStackTrace();
                 }
             } else {
+                serverSocket = new ServerSocket(portaNode);
                 while (true) {
                     try {
                         System.out.println("À espera de informação do servidor...");
 
-                        serverSocket = new ServerSocket(portaNode);
                         socket = serverSocket.accept();
                         ip_origem = socket.getInetAddress();
 
@@ -140,7 +140,6 @@ public class Node {
                     String ipNodoVizinho = res[1];
 
                     NodeStream ns = new NodeStream(ipNodoVizinho, Integer.parseInt(portaStream));
-
                 }
             }
         }

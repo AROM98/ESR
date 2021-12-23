@@ -27,6 +27,7 @@ public class NodeStream {
     DatagramSocket RTPsocketReceiver; //socket to be used to send and receive UDP packet
     DatagramSocket RTPsocketSender; //socket to be used to send and receive UDP packet
     int RTP_PORT; //port where the client will receive the RTP packets
+    static int VIDEO_LENGTH = 500; //length of the video in frames
 
     Timer nTimer; //timer used to receive data from the UDP socket and send it to a neighbour node
     byte[] dBuf; //buffer used to store data received from the server
@@ -35,7 +36,7 @@ public class NodeStream {
     //--------------------------
     //Constructor
     //--------------------------
-    public NodeStream(String ipNodoVizinho, int portaStream){
+    public NodeStream(String ipNodoVizinho, int portaStream) {
 
 
         RTP_PORT = portaStream;
@@ -75,41 +76,43 @@ public class NodeStream {
     class nodeReceiverSender implements ActionListener {
         public void actionPerformed(ActionEvent e) {
 
-            try{
-                imagenb++;
+            if (imagenb < VIDEO_LENGTH) {
+                try {
+                    imagenb++;
 
-                //-----------RECEIVING--------
+                    //-----------RECEIVING--------
 
-                //Construct a DatagramPacket to receive data from the UDP socket
-                rcvdp = new DatagramPacket(dBuf, dBuf.length);
-                RTPsocketReceiver.receive(rcvdp);
+                    //Construct a DatagramPacket to receive data from the UDP socket
+                    rcvdp = new DatagramPacket(dBuf, dBuf.length);
+                    RTPsocketReceiver.receive(rcvdp);
 
-                //create an RTPpacket object from the DP
-                RTPpacket rtp_packet = new RTPpacket(rcvdp.getData(), rcvdp.getLength());
+                    //create an RTPpacket object from the DP
+                    RTPpacket rtp_packet = new RTPpacket(rcvdp.getData(), rcvdp.getLength());
 
-                //print important header fields of the RTP packet received:
-                System.out.println("Got RTP packet with SeqNum # "+rtp_packet.getsequencenumber()+" TimeStamp "+rtp_packet.gettimestamp()+" ms, of type "+rtp_packet.getpayloadtype());
+                    //print important header fields of the RTP packet received:
+                    System.out.println("Got RTP packet with SeqNum # " + rtp_packet.getsequencenumber() + " TimeStamp " + rtp_packet.gettimestamp() + " ms, of type " + rtp_packet.getpayloadtype());
 
-                //print header bitstream:
-                rtp_packet.printheader();
+                    //print header bitstream:
+                    rtp_packet.printheader();
 
-                //-----------SENDING--------
+                    //-----------SENDING--------
 
-                //Construct a DatagramPacket to send data over the UDP socket
-                senddp = new DatagramPacket(dBuf, dBuf.length, ipNodoVizinho, RTP_PORT);
-                RTPsocketSender.send(senddp);
+                    //Construct a DatagramPacket to send data over the UDP socket
+                    senddp = new DatagramPacket(dBuf, dBuf.length, ipNodoVizinho, RTP_PORT);
+                    RTPsocketSender.send(senddp);
 
-                System.out.println("Send frame #"+imagenb);
-            }
-            catch (InterruptedIOException iioe){
-                System.out.println("Nothing to read");
-            }
-            catch (IOException ioe) {
-                System.out.println("Exception caught: "+ioe);
-            } catch (Exception ex) {
-                ex.printStackTrace();
+                    System.out.println("Send frame #" + imagenb);
+                } catch (InterruptedIOException iioe) {
+                    System.out.println("Nothing to read");
+                } catch (IOException ioe) {
+                    System.out.println("Exception caught: " + ioe);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            } else {
+                //if we have reached the end of the video file, stop the timer
+                nTimer.stop();
             }
         }
     }
 }
-
