@@ -1,0 +1,9 @@
+javac -cp .:lib/json-simple-1.1.1.jar *.java
+
+
+su - $user
+export DISPLAY=:0.0
+
+
+servidor: java Server files.txt
+cliente: java Node 10.0.4.10 1 10.0.3.21

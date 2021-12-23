@@ -1,6 +1,8 @@
 import java.io.*;
 import java.net.Socket;
 
+import static java.lang.Thread.sleep;
+
 public class Beacon implements Runnable{
     private String server;
     private String nodeIp;
@@ -18,20 +20,23 @@ public class Beacon implements Runnable{
         Socket clientSocket;
         OutputStream out;
 
-        try {
-            System.out.println("Vou abrir em " + server + ":" + porta);
-            clientSocket = new Socket(server,porta);
-            System.out.println("Abri cli-socket em " + server + ":" + porta);
+        while(true) {
 
-            out = clientSocket.getOutputStream();
+            try {
+                clientSocket = new Socket(server, porta);
+                System.out.println("Beacon signal " + server + ":" + porta);
 
-            String msg = nodeIp + " " + "0"; //flag 0 ping
-            byte[] tmp = msg.getBytes();
-            ByteMessages.sendBytes(tmp, out);
+                out = clientSocket.getOutputStream();
 
-        }
-        catch (IOException e) {
-            e.printStackTrace();
+                String msg = "0 " + nodeIp; //flag 0 ping
+                byte[] tmp = msg.getBytes();
+                ByteMessages.sendBytes(tmp, out);
+
+                sleep(10000);
+
+            } catch (IOException | InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

@@ -58,7 +58,7 @@ public class Thread_Cliente implements Runnable{
 
 
     public static void main(String args[]){
-        Cliente cli = new Cliente("10.0.0.1", 81);
+        Cliente cli = new Cliente("10.0.0.1", 6868);
         cli.run();
     }
 }
