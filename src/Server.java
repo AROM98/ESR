@@ -181,3 +181,39 @@ public class Server {
         }
     }
 }
+
+class beaconListener implements Runnable{
+
+    public int beacon_port = 6870;
+    public ServerSocket serverSocket = null;
+    public Socket socket = null;
+    public InputStream input;
+    public Bootstrapper bootstrapper;
+    public HashMap<Integer, Integer> portas;
+
+    public beaconListener(Bootstrapper bootstrapper,HashMap<Integer, Integer> portas){
+        this.bootstrapper = bootstrapper;
+        this.portas = portas;
+    }
+
+    public void run() {
+
+        ExecutorService pool = Executors.newCachedThreadPool();
+        try {
+            serverSocket = new ServerSocket(beacon_port);
+            socket = serverSocket.accept();
+            InputStream input = socket.getInputStream();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        byte[] tmp = new byte[0];
+        try {
+            tmp = ByteMessages.readBytes(input);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        ServerAnswerThread thread_tmp = new ServerAnswerThread(bootstrapper, tmp, portas);
+        pool.execute(thread_tmp);
+    }
+}
