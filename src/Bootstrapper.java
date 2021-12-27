@@ -223,7 +223,7 @@ public class Bootstrapper {
         int nNodo = nodoID.get(ipDestino);
         int auxNodo;
         boolean flagServer=false;
-        System.out.println("Entra if: " + ativos.containsKey(nNodo));
+        //System.out.println("Entra if: " + ativos.containsKey(nNodo));
 
         if(ipOrigem.equals(serverIP)){
             flagServer=true;
@@ -236,20 +236,20 @@ public class Bootstrapper {
         }
 
         if(flagServer){  //se for logo o vizinho a origem
-            System.out.println("O IP: " + ipDestino +"não tem: " + ipOrigem +"? " + hash.get(ipOrigem));
+            //System.out.println("O IP: " + ipDestino +"não tem: " + ipOrigem +"? " + hash.get(ipOrigem));
             if(hash.get(ipOrigem)==1){
 
                 return new Tuple<>(ipOrigem,1);
             }
-            System.out.println("O server está longe");
+            //System.out.println("O server está longe");
         }
 
-        System.out.println(ativos.get(nNodo));
+        //System.out.println(ativos.get(nNodo));
         for(Object key : ativos.get(nNodo).getY().keySet()) {
             auxNodo = nodoID.get(key);
-            System.out.println(ativos.get(auxNodo));
+            //System.out.println(ativos.get(auxNodo));
             if (!visitado.contains(auxNodo)) {
-                System.out.println("Ainda não foi visitado");
+                //System.out.println("Ainda não foi visitado");
                 if (key.equals(ipOrigem) && (Integer) ativos.get(nNodo).getY().get(key) == 1) {  //caso super especifico
                     return new Tuple<>(ipOrigem, 1);
                 }
@@ -266,39 +266,38 @@ public class Bootstrapper {
                     }
                 }else{
                     if (ativos.get(auxNodo).getX() == 1) { //só quero que sejam nodos do tipo nodo e não cliente
-                        System.out.println();
-                        System.out.println("O vizinho tem peso: " + ativos.get(auxNodo).getY());
-                        //[ERRO]Preciso de converter o ipOrigem e o elemento que quero comparar no get para o nodoID e ai comparar
+                        //System.out.println();
+                        //System.out.println("O vizinho tem peso: " + ativos.get(auxNodo).getY());
                                 pesoOrigem = getPesoFromAtivos(ativos.get(auxNodo).getY(),ipOrigem);
                     }
                 }
-                System.out.println(hash.get(ipOrigem));
+                //System.out.println(hash.get(ipOrigem));
                 pesoTotal = pesoVizinho + pesoOrigem;
-                System.out.println("O vizinho tem peso: " + pesoVizinho + " peso origem " + pesoOrigem);
-                System.out.println("O pesoTotal tem peso: " + pesoTotal + " Para a key: " + key);
-                System.out.println("O pesoFinal " + pesoFinal + " >= " + pesoTotal + " pesoTotal");
-                System.out.println("O pesoVizinhoAtual " + pesoVizinhoAux + " >= " + pesoVizinho + " peso Do possivel vizinho");
+                //System.out.println("O vizinho tem peso: " + pesoVizinho + " peso origem " + pesoOrigem);
+                //System.out.println("O pesoTotal tem peso: " + pesoTotal + " Para a key: " + key);
+                //System.out.println("O pesoFinal " + pesoFinal + " >= " + pesoTotal + " pesoTotal");
+                //System.out.println("O pesoVizinhoAtual " + pesoVizinhoAux + " >= " + pesoVizinho + " peso Do possivel vizinho");
                 if (((pesoFinal >= pesoTotal && pesoVizinhoAux >= pesoVizinho) || (pesoFinal >= pesoTotal && !(pesoVizinhoAux >= pesoVizinho))) && ativos.get(auxNodo).getX() == 1) {  //
                     pesoFinal = pesoTotal;
                     pesoVizinhoAux = pesoVizinho;
                     vizinho = (String) key;
-                    System.out.println("Novo Vizinho: " + vizinho);
+                    //System.out.println("Novo Vizinho: " + vizinho);
                 }
-            } else
-                System.out.println("já foi visitado");
+            } //else
+                //System.out.println("já foi visitado");
         }
             //por fim
             if (flagServer) {  //se for logo o vizinho a origem
                 if ((Integer) hash.get(ipOrigem) < pesoVizinhoAux) {
-                    System.out.println("o ip tanga xD: " + ipOrigem);
-                    System.out.println(hash);
-                    System.out.println("Tanga do caralho:\n peso na hash: " + hash.get(ipOrigem) + " O pesoTotal: " + pesoTotal);
+                    //System.out.println("o ip tanga xD: " + ipOrigem);
+                    //System.out.println(hash);
+                    //System.out.println("Tanga do caralho:\n peso na hash: " + hash.get(ipOrigem) + " O pesoTotal: " + pesoTotal);
 
                     return new Tuple<>(ipOrigem, 1);
                 }
             } else {
                 if (getPesoFromAtivos(ativos.get(nNodo).getY(),ipOrigem) < pesoOrigem) {  //caso super especifico
-                    System.out.println("Tanga do caralho2:\n peso na hash: " + ativos.get(nNodo).getY().get(ipOrigem) + " O pesoTotal: " + pesoTotal);
+                    //System.out.println("Tanga do caralho2:\n peso na hash: " + ativos.get(nNodo).getY().get(ipOrigem) + " O pesoTotal: " + pesoTotal);
 
                     return new Tuple<>(ipOrigem, 1);
                 }
@@ -316,9 +315,9 @@ public class Bootstrapper {
         list.add(vizinho);
         while(!vizinho.equals(ipOrigem)){
             tuplo = new Tuple<>(bestVizinho(list,ipOrigem, vizinho));
-            System.out.println(tuplo.getX());
+            //System.out.println(tuplo.getX());
             vizinho= tuplo.getX();
-            System.out.println(vizinho);
+            //System.out.println(vizinho);
             peso = peso+tuplo.getY();
             list.add(vizinho);
         }
@@ -344,12 +343,12 @@ public class Bootstrapper {
             int idDestino =nodoID.get(lista.get(i+1));
             if(nodos.containsKey(idOrigem)){
                 for(Object key:nodos.get(idOrigem).keySet()){
-                    System.out.println("O IP existe no node ID:"+key);
+                    //System.out.println("O IP existe no node ID:"+key);
                     if(!key.equals(serverIP) && nodoID.get((String) key)==idDestino){
                         r.add((String) key);
-                        System.out.println("return: "+r);
+                        //ystem.out.println("return: "+r);
                     }else{
-                        System.out.println("O IP NÂO existe no node ID:"+key);
+                        //System.out.println("O IP NÂO existe no node ID:"+key);
                     }
                 }
             }
@@ -357,6 +356,7 @@ public class Bootstrapper {
         return r;
     }
 
+    //Atualiza os nodos que passaram a ter o ficheiro
     private void updateNodosComFile(ArrayList<String> list, Integer fileID){
 
     }
