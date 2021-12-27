@@ -81,7 +81,7 @@ public class VideoPlayer_Client {
 
         //init para a parte do cliente
         //--------------------------
-        cTimer = new Timer(10, new clientTimerListener());
+        cTimer = new Timer(20, new clientTimerListener());
         cTimer.setInitialDelay(0);
         cTimer.setCoalesce(true);
         cBuf = new byte[15000]; //allocate enough memory for the buffer used to receive data from the server

@@ -112,6 +112,9 @@ public class NodeStream {
             } else {
                 //if we have reached the end of the video file, stop the timer
                 nTimer.stop();
+
+                RTPsocketSender.close();
+                RTPsocketReceiver.close();
             }
         }
     }

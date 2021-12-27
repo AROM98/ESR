@@ -19,6 +19,7 @@ public class Node{
             System.out.println("O server é: " + server);
             System.out.println("O ip do Node é: " + nodeIp);
         }
+
         Thread beaconThread = new Thread(new Beacon(server, nodeIp, portaBeacon));
         beaconThread.start();
 
