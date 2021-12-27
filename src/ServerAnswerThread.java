@@ -69,9 +69,15 @@ public class ServerAnswerThread implements Runnable{
 
                 //mandar a mensagem aos nodos intermediarios
                 ArrayList<String> trajeto = new ArrayList<>(bootstrapper.wantToSendFile(ficheiros.get(ficheiro),ipNode)); //trajeto do servidor ao cliente
+                //ArrayList<String> trajeto = new ArrayList<>();
                 //trajeto.add("10.0.4.1");
                 //trajeto.add("10.0.18.1");
                 //trajeto.add(ipNode);
+
+                for (String t : trajeto
+                     ) {
+                    System.out.println("NODO: " + t);
+                }
 
                 for (int i = 0; i < trajeto.size() - 1; i++){
                     try {
