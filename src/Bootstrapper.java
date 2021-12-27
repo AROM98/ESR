@@ -6,6 +6,7 @@ import org.json.simple.*;
 import java.io.FileReader;
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 
 public class Bootstrapper {
@@ -209,6 +210,17 @@ public class Bootstrapper {
         return r;
     }
 
+    private Integer getPesoFromAtivos(HashMap<String,Integer> hash, String ip){
+        Integer peso = 100000;
+        Integer idIP = nodoID.get(ip);
+        for(Object key : hash.keySet()){
+            if(nodoID.get((String) key) == idIP){
+                return hash.get(key);
+            }
+        }
+        return peso;
+    }
+
     private Tuple<String,Integer> bestVizinho( ArrayList<String> vizitados,String ipOrigem, String ipDestino) {
         int pesoOrigem = 0;
         int pesoTotal = 0;
@@ -262,11 +274,13 @@ public class Bootstrapper {
                         } else {
                             pesoOrigem = (Integer) clientes.get(auxNodo).get(ipOrigem);
                         }
-
                     }
-                } else {
+                }else{
                     if (ativos.get(auxNodo).getX() == 1) { //só quero que sejam nodos do tipo nodo e não cliente
-                        pesoOrigem = (Integer) ativos.get(auxNodo).getY().get(ipOrigem);
+                        System.out.println();
+                        System.out.println("O vizinho tem peso: " + ativos.get(auxNodo).getY());
+                        //[ERRO]Preciso de converter o ipOrigem e o elemento que quero comparar no get para o nodoID e ai comparar
+                                pesoOrigem = getPesoFromAtivos(ativos.get(auxNodo).getY(),ipOrigem);
                     }
                 }
                 System.out.println(hash.get(ipOrigem));
@@ -294,7 +308,7 @@ public class Bootstrapper {
                     return new Tuple<>(ipOrigem, 1);
                 }
             } else {
-                if ((Integer) ativos.get(nNodo).getY().get(ipOrigem) < pesoOrigem) {  //caso super especifico
+                if (getPesoFromAtivos(ativos.get(nNodo).getY(),ipOrigem) < pesoOrigem) {  //caso super especifico
                     System.out.println("Tanga do caralho2:\n peso na hash: " + ativos.get(nNodo).getY().get(ipOrigem) + " O pesoTotal: " + pesoTotal);
 
                     return new Tuple<>(ipOrigem, 1);
@@ -323,8 +337,40 @@ public class Bootstrapper {
         return r;
     }
 
+    //recebe lista do melhor caminho da wantToSendFile e converte-a para poder ser dada ao server
+    private ArrayList<String> listToSend(ArrayList<String> lista){
+        ArrayList<String> r=new ArrayList<>();
+        //String destino = lista.get(0);
+        Collections.reverse(lista);
+        for(int i=0; i<lista.size()-1; i++){
+            if(i==0 && !lista.get(i).equals(serverIP)){
+                r.add(serverLigacoes.get(nodoID.get(lista.get(i))));
+            }else{
+                if(i==0 && lista.get(i).equals(serverIP)) {
+                    r.add(serverLigacoes.get(nodoID.get(lista.get(i+1))));
+                    continue;
+                }
+            }
+            int idOrigem = nodoID.get(lista.get(i));
+            int idDestino =nodoID.get(lista.get(i+1));
+            if(nodos.containsKey(idOrigem)){
+                for(Object key:nodos.get(idOrigem).keySet()){
+                    System.out.println("O IP existe no node ID:"+key);
+                    if(!key.equals(serverIP) && nodoID.get((String) key)==idDestino){
+                        r.add((String) key);
+                        System.out.println("return: "+r);
+                    }else{
+                        System.out.println("O IP NÂO existe no node ID:"+key);
+                    }
+                }
+            }
+        }
+        //r.add(destino);
+        return r;
+    }
 
-    public Tuple<Integer,ArrayList<String>> wantToSendFile(Integer fileID, String server, String nodoDestino){
+
+    public ArrayList<String> wantToSendFile(Integer fileID, String server, String nodoDestino){
         Tuple <Integer,ArrayList<String>> r = null;
         Tuple <Integer,ArrayList<String>> aux;
 
@@ -346,7 +392,8 @@ public class Bootstrapper {
             //Não existem nodos com o ficheiro logo vai ao servidor
             r = new Tuple<>(bestRoute(server, nodoDestino));
         }
-        return r;
+        return listToSend(r.getY());
+        //return r.getY();
     }
 
 
@@ -440,9 +487,9 @@ public class Bootstrapper {
         //System.out.println(strapper.getFilesToSend() + "\n");
         //strapper.getVizinhos(strapper.getFilesToSend().get("10.0.8.2"));
 
-        System.out.println("Ligação: " + strapper.wantToSendFile(1,"10.0.4.10", "10.0.3.21"));
+        //System.out.println("Ligação: " + strapper.wantToSendFile(1,"10.0.4.10", "10.0.3.21"));
         //System.out.println("Ligação: " + strapper.wantToSendFile(1,"10.0.4.10", "10.0.0.20"));
-        //System.out.println("Ligação: " + strapper.wantToSendFile(1,"10.0.4.10", "10.0.11.21"));
+        System.out.println("Ligação: " + strapper.wantToSendFile(1,"10.0.4.10", "10.0.11.21"));
         //System.out.println("Ligação: " + strapper.wantToSendFile(1,"10.0.19.1", "10.0.11.21"));
     }
 }
