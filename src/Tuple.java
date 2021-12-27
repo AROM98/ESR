@@ -1,5 +1,3 @@
-package lib;
-
 public class Tuple<T, T1> {
     private T x;
     private T1 y;
@@ -7,6 +5,11 @@ public class Tuple<T, T1> {
     public Tuple(T x, T1 y) {
         this.x = x;
         this.y = y;
+    }
+
+    public Tuple(Tuple tuple) {
+        this.x = (T) tuple.getX();
+        this.y = (T1) tuple.getY();
     }
 
     public T getX() {

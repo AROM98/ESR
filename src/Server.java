@@ -109,8 +109,7 @@ public class Server {
      */
     public static void main(String[] args) throws IOException {
         int porta = 6868;
-        String path2 = "/../Rede.json";
-        String path3 = "Rede1.json";
+        String path = "Rede1.json";
 
         Integer file_id = 0;
 
@@ -126,21 +125,20 @@ public class Server {
             System.out.println("dar como input o ficheiro!");
         }
 
-        //Bootstrap bootstrapper = new Bootstrap(path3); //remendar depois de alterar o nome.
 
         /**
          * inicialização feita
          * agora iniciar servidor
          */
-        Bootstrapper bootstrapper = new Bootstrapper(path3);
+        Bootstrapper bootstrapper = new Bootstrapper(path);
         ExecutorService pool = Executors.newCachedThreadPool();
         ServerSocket serverSocket = null;
         Socket socket;
         InputStream input = null;
         InetAddress ip_origem;
 
-        beaconListener bl = new beaconListener(bootstrapper, portas, ficheiros);
-        pool.execute(bl);
+        Thread beaconThread = new Thread(new BeaconListener(bootstrapper));
+        beaconThread.start();
 
 
         /**
@@ -178,43 +176,5 @@ public class Server {
             pool.execute(thread_tmp);
             
         }
-    }
-}
-
-class beaconListener implements Runnable{
-
-    public int beacon_port = 6870;
-    public ServerSocket serverSocket = null;
-    public Socket socket = null;
-    public InputStream input;
-    public Bootstrapper bootstrapper;
-    public HashMap<Integer, Integer> portas;
-    public HashMap<String, Integer> ficheiros;
-
-    public beaconListener(Bootstrapper bootstrapper,HashMap<Integer, Integer> portas, HashMap<String, Integer> ficheiro){
-        this.bootstrapper = bootstrapper;
-        this.portas = portas;
-        this.ficheiros=ficheiro;
-    }
-
-    public void run() {
-
-        ExecutorService pool = Executors.newCachedThreadPool();
-        try {
-            serverSocket = new ServerSocket(beacon_port);
-            socket = serverSocket.accept();
-            InputStream input = socket.getInputStream();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        byte[] tmp = new byte[0];
-        try {
-            tmp = ByteMessages.readBytes(input);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        ServerAnswerThread thread_tmp = new ServerAnswerThread(bootstrapper, tmp, portas, ficheiros);
-        pool.execute(thread_tmp);
     }
 }

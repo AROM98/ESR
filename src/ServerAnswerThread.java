@@ -41,6 +41,7 @@ public class ServerAnswerThread implements Runnable{
                 // criar tabela com timestamps ? mas isto teria que ser mantido por uma thread, não?
                 //atualizar coisas no bootstrap, se não estou enganado!
                 ipNode = res[1];
+                bootstrapper.addIPativo(ipNode);
 
 
                 break;
@@ -77,6 +78,11 @@ public class ServerAnswerThread implements Runnable{
                 //trajeto.add("10.0.4.1");
                 //trajeto.add("10.0.18.1");
                 //trajeto.add(ipNode);
+
+                for (String t: trajeto
+                     ) {
+                    System.out.println("NODO: " + t);
+                }
 
                 for (int i = 0; i < trajeto.size() - 1; i++){
                     try {
