@@ -370,7 +370,7 @@ public class Bootstrapper {
     }
 
 
-    public ArrayList<String> wantToSendFile(Integer fileID, String server, String nodoDestino){
+    public ArrayList<String> wantToSendFile(Integer fileID, String nodoDestino){
         Tuple <Integer,ArrayList<String>> r = null;
         Tuple <Integer,ArrayList<String>> aux;
 
@@ -384,13 +384,13 @@ public class Bootstrapper {
             }
             //Ver se é melhor ir buscar a esses nodos
             // ou ir ao servidor
-            aux = new Tuple<>(bestRoute(server, nodoDestino));
+            aux = new Tuple<>(bestRoute(serverIP, nodoDestino));
             if(aux.getX()> r.getX()){
                 r = new Tuple<>(aux);
             }
         }else{
             //Não existem nodos com o ficheiro logo vai ao servidor
-            r = new Tuple<>(bestRoute(server, nodoDestino));
+            r = new Tuple<>(bestRoute(serverIP, nodoDestino));
         }
         return listToSend(r.getY());
         //return r.getY();
@@ -489,7 +489,7 @@ public class Bootstrapper {
 
         //System.out.println("Ligação: " + strapper.wantToSendFile(1,"10.0.4.10", "10.0.3.21"));
         //System.out.println("Ligação: " + strapper.wantToSendFile(1,"10.0.4.10", "10.0.0.20"));
-        System.out.println("Ligação: " + strapper.wantToSendFile(1,"10.0.4.10", "10.0.11.21"));
+        System.out.println("Ligação: " + strapper.wantToSendFile(1, "10.0.3.21"));
         //System.out.println("Ligação: " + strapper.wantToSendFile(1,"10.0.19.1", "10.0.11.21"));
     }
 }

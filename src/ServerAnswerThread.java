@@ -12,16 +12,18 @@ public class ServerAnswerThread implements Runnable{
     private int porta;
     private int portaNode;
     private HashMap<Integer, Integer> portas;
+    private HashMap<String, Integer> ficheiros;
 
     /**
      * Recebe argumentos inicias para conseguir responder
      */
-    public ServerAnswerThread(Bootstrapper b, byte[] dados, HashMap<Integer, Integer> portas){
+    public ServerAnswerThread(Bootstrapper b, byte[] dados, HashMap<Integer, Integer> portas, HashMap<String, Integer> ficheiros){
         this.porta = 6868;
         this.portaNode = 6869;
         this.bootstrapper = b;
         this.dados = dados;
         this.portas = portas;
+        this.ficheiros = ficheiros;
     }
 
     public void run() {
@@ -71,10 +73,10 @@ public class ServerAnswerThread implements Runnable{
                 }
 
                 //mandar a mensagem aos nodos intermediarios
-                ArrayList<String> trajeto = new ArrayList<>(); //trajeto do servidor ao cliente
-                trajeto.add("10.0.4.1");
-                trajeto.add("10.0.18.1");
-                trajeto.add(ipNode);
+                ArrayList<String> trajeto = new ArrayList<>(bootstrapper.wantToSendFile(ficheiros.get(ficheiro),ipNode)); //trajeto do servidor ao cliente
+                //trajeto.add("10.0.4.1");
+                //trajeto.add("10.0.18.1");
+                //trajeto.add(ipNode);
 
                 for (int i = 0; i < trajeto.size() - 1; i++){
                     try {

@@ -139,7 +139,7 @@ public class Server {
         InputStream input = null;
         InetAddress ip_origem;
 
-        beaconListener bl = new beaconListener(bootstrapper, portas);
+        beaconListener bl = new beaconListener(bootstrapper, portas, ficheiros);
         pool.execute(bl);
 
 
@@ -174,7 +174,7 @@ public class Server {
              * byte[] que chega é passado a thread que faz parse e responde consoante o caso.
              */
             byte[] tmp = ByteMessages.readBytes(input);
-            ServerAnswerThread thread_tmp = new ServerAnswerThread(bootstrapper, tmp, portas);
+            ServerAnswerThread thread_tmp = new ServerAnswerThread(bootstrapper, tmp, portas, ficheiros);
             pool.execute(thread_tmp);
             
         }
@@ -189,10 +189,12 @@ class beaconListener implements Runnable{
     public InputStream input;
     public Bootstrapper bootstrapper;
     public HashMap<Integer, Integer> portas;
+    public HashMap<String, Integer> ficheiros;
 
-    public beaconListener(Bootstrapper bootstrapper,HashMap<Integer, Integer> portas){
+    public beaconListener(Bootstrapper bootstrapper,HashMap<Integer, Integer> portas, HashMap<String, Integer> ficheiro){
         this.bootstrapper = bootstrapper;
         this.portas = portas;
+        this.ficheiros=ficheiro;
     }
 
     public void run() {
@@ -212,7 +214,7 @@ class beaconListener implements Runnable{
         } catch (IOException e) {
             e.printStackTrace();
         }
-        ServerAnswerThread thread_tmp = new ServerAnswerThread(bootstrapper, tmp, portas);
+        ServerAnswerThread thread_tmp = new ServerAnswerThread(bootstrapper, tmp, portas, ficheiros);
         pool.execute(thread_tmp);
     }
 }
