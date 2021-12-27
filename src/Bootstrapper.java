@@ -191,16 +191,6 @@ public class Bootstrapper {
         return r;
     }
 
-    //Não pertence aqui, vai para o nodo
-    public void getVizinhos(String json){
-        Object obj = JSONValue.parse(json);
-        JSONObject objt = (JSONObject) obj;
-        JSONArray array = (JSONArray) objt.get("Connections");
-        for(int i=0; i<array.size(); i++){
-            System.out.println(array.get(i));
-        }
-    }
-
     public ArrayList<Integer> getNodoIDarray(ArrayList<String> vizitados){
         ArrayList<Integer> r = new ArrayList<>();
         for (String value : vizitados){
@@ -403,7 +393,7 @@ public class Bootstrapper {
 
         if(this.ativos.containsKey(nIP)){
             //timestamp
-
+            System.out.println("Já era ativo, nova hash: "+ativos);
         }else{ //ip ainda não estava ativo
 
             //VER SE ESSE IP TEM IPS VIZINHOS ATIVOS
@@ -441,7 +431,9 @@ public class Bootstrapper {
                     }
                 }
             }
+            System.out.println("Nova hash de ativos: "+ativos);
         }
+        //System.out.println("Depois de addicionar "+ativos);
     }
 
     public static void main(String[] args) {
