@@ -12,15 +12,15 @@ public class Bootstrapper {
 
     private Reader ficheiro;
     private HashMap<String, Integer> nodoID;
-    private HashMap<Integer, String> serverLigacoes;
-    private HashMap<Integer, HashMap> nodos;
-    private HashMap<Integer, HashMap> clientes;
-    private HashMap<Integer, Tuple<Integer,HashMap>> ativos;
+    public HashMap<Integer, String> serverLigacoes;
+    public HashMap<Integer, HashMap> nodos;
+    public HashMap<Integer, HashMap> clientes;
+    public HashMap<Integer, Tuple<Integer,HashMap>> ativos;
     private HashMap<Integer, ArrayList> nodosComFile;
 
-    private int Nvizinhos = 2; //Numero de vizinhos que um IP pode ter
-    private String serverIP;
-    private ArrayList<String> vizitados;
+    //private int Nvizinhos = 2; //Numero de vizinhos que um IP pode ter
+    public String serverIP;
+    //private ArrayList<String> vizitados;
 
     public Bootstrapper(String file){
         try {
@@ -358,6 +358,9 @@ public class Bootstrapper {
         return r;
     }
 
+    private void updateNodosComFile(ArrayList<String> list, Integer fileID){
+
+    }
 
     public ArrayList<String> wantToSendFile(Integer fileID, String nodoDestino){
         Tuple <Integer,ArrayList<String>> r = null;
@@ -393,7 +396,7 @@ public class Bootstrapper {
 
         if(this.ativos.containsKey(nIP)){
             //timestamp
-            System.out.println("Já era ativo, nova hash: "+ativos);
+            System.out.println("Já era ativo, mesma hash: "+ativos);
         }else{ //ip ainda não estava ativo
 
             //VER SE ESSE IP TEM IPS VIZINHOS ATIVOS
@@ -412,7 +415,7 @@ public class Bootstrapper {
 
                         //Já tenho lista de vizinho è adicionar aos vizinhos
                         ativos.put(nIP, new Tuple(0,vizinhosAtivosArray(aux)));
-            }
+                }
             //ATUALIZAR OS RESTANTES IPS ATIVOS PARA SABEREM DO NOVO NODO
             for(Object key: ativos.keySet()){
                 //System.out.println("key:" + key + " é nó? " + ativos.get(key).getX());
@@ -423,8 +426,7 @@ public class Bootstrapper {
                     if(nodoIP != ""){
                         //System.out.println("Vai atualizar ativos");
                         //if(ativos.get(key).getY().size()<Nvizinhos){
-                            HashMap auxAtivos = ativos.get(key).getY();
-                            auxAtivos.put(nodoIP, nodos.get(key).get(nodoIP));
+                        ativos.get(key).getY().put(nodoIP, nodos.get(key).get(nodoIP));
                         //}else{
                             //ativos.get(key).setY(append(ativos.get(key).getY(),nodoIP,(Integer) nodos.get(key).get(nodoIP))); //PODE FALHAR AQUI
                         //}
