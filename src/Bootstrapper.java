@@ -285,7 +285,7 @@ public class Bootstrapper {
                     System.out.println("Novo Vizinho: " + vizinho);
                 }
             } else
-                System.out.println("já foi vizitado");
+                System.out.println("já foi visitado");
         }
             //por fim
             if (flagServer) {  //se for logo o vizinho a origem
@@ -354,7 +354,6 @@ public class Bootstrapper {
                 }
             }
         }
-        //r.add(destino);
         return r;
     }
 

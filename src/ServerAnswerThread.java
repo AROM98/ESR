@@ -28,6 +28,9 @@ public class ServerAnswerThread implements Runnable{
 
     public void run() {
 
+
+
+
         int flag;
         String ipNode;
         String[] res;
@@ -36,15 +39,6 @@ public class ServerAnswerThread implements Runnable{
         flag = Integer.parseInt(res[0]);
 
         switch (flag){
-            case 0 :
-                // 0-> beacons (nodo -> servidor)
-                // criar tabela com timestamps ? mas isto teria que ser mantido por uma thread, não?
-                //atualizar coisas no bootstrap, se não estou enganado!
-                ipNode = res[1];
-                bootstrapper.addIPativo(ipNode);
-
-
-                break;
             case 1:
 
                 //1-> pede stream (nodo(cliente) -> servidor)
@@ -54,7 +48,7 @@ public class ServerAnswerThread implements Runnable{
                 String ficheiro = res[1];
                 ipNode = res[2];
 
-                Socket clientSocket = null;
+                Socket clientSocket;
                 OutputStream out = null;
                 try {
                     clientSocket = new Socket(ipNode, portaNode);
@@ -78,11 +72,6 @@ public class ServerAnswerThread implements Runnable{
                 //trajeto.add("10.0.4.1");
                 //trajeto.add("10.0.18.1");
                 //trajeto.add(ipNode);
-
-                for (String t: trajeto
-                     ) {
-                    System.out.println("NODO: " + t);
-                }
 
                 for (int i = 0; i < trajeto.size() - 1; i++){
                     try {

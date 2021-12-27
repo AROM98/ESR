@@ -109,7 +109,7 @@ public class Server {
      */
     public static void main(String[] args) throws IOException {
         int porta = 6868;
-        String path = "Rede1.json";
+        String path = "Rede.json";
 
         Integer file_id = 0;
 
@@ -131,6 +131,8 @@ public class Server {
          * agora iniciar servidor
          */
         Bootstrapper bootstrapper = new Bootstrapper(path);
+        bootstrapper.parser();
+
         ExecutorService pool = Executors.newCachedThreadPool();
         ServerSocket serverSocket = null;
         Socket socket;
@@ -139,7 +141,6 @@ public class Server {
 
         Thread beaconThread = new Thread(new BeaconListener(bootstrapper));
         beaconThread.start();
-
 
         /**
          * Abertura do server-socket
@@ -150,8 +151,6 @@ public class Server {
             e.printStackTrace();
         }
 
-        //System.out.println();
-        //System.out.println(bootstrapper.getNodos());
 
         while (true){
             try {

@@ -45,10 +45,8 @@ class BeaconListener implements Runnable {
             String data = new String(tmp);
             res = data.split(" ");
 
-
             ipNode = res[1];
             bootstrapper.addIPativo(ipNode);
-            System.out.println("Adicionei o nodo " + ipNode + " à lista de nodos ativos");
         }
     }
 }
