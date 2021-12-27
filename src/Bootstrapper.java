@@ -248,6 +248,7 @@ public class Bootstrapper {
         for(Object key : ativos.get(nNodo).getY().keySet()) {
             auxNodo = nodoID.get(key);
             //System.out.println(ativos.get(auxNodo));
+            //System.out.println("O caralho do visitado "+visitado);
             if (!visitado.contains(auxNodo)) {
                 //System.out.println("Ainda não foi visitado");
                 if (key.equals(ipOrigem) && (Integer) ativos.get(nNodo).getY().get(key) == 1) {  //caso super especifico
@@ -277,12 +278,13 @@ public class Bootstrapper {
                 //System.out.println("O pesoTotal tem peso: " + pesoTotal + " Para a key: " + key);
                 //System.out.println("O pesoFinal " + pesoFinal + " >= " + pesoTotal + " pesoTotal");
                 //System.out.println("O pesoVizinhoAtual " + pesoVizinhoAux + " >= " + pesoVizinho + " peso Do possivel vizinho");
-                if (((pesoFinal >= pesoTotal && pesoVizinhoAux >= pesoVizinho) || (pesoFinal >= pesoTotal && !(pesoVizinhoAux >= pesoVizinho))) && ativos.get(auxNodo).getX() == 1) {  //
+                if (((pesoFinal >= pesoTotal && pesoVizinhoAux >= pesoVizinho && ativos.get(auxNodo).getX() == 1) || (pesoFinal > pesoTotal && pesoVizinhoAux < pesoVizinho)&& ativos.get(auxNodo).getX() == 1) ) {  //
                     pesoFinal = pesoTotal;
                     pesoVizinhoAux = pesoVizinho;
                     vizinho = (String) key;
                     //System.out.println("Novo Vizinho: " + vizinho);
-                }
+                }//else
+                    //System.out.println("não foi adicionado: " + key );
             } //else
                 //System.out.println("já foi visitado");
         }
@@ -320,7 +322,7 @@ public class Bootstrapper {
             //System.out.println(vizinho);
             peso = peso+tuplo.getY();
             list.add(vizinho);
-        }
+        }   
         Tuple <Integer,ArrayList<String>> r =new Tuple<>(peso,list);
         return r;
     }
@@ -452,15 +454,15 @@ public class Bootstrapper {
 
         //Para a rede
         strapper.addIPativo("10.0.4.1");   //2
-        strapper.addIPativo("10.0.5.2");   //3
+        //strapper.addIPativo("10.0.5.2");   //3
         strapper.addIPativo("10.0.18.1");  //7
         strapper.addIPativo("10.0.16.1");  //6
         strapper.addIPativo("10.0.13.1");  //5
-        strapper.addIPativo("10.0.0.21");  //11
+        strapper.addIPativo("10.0.0.20");  //11
 
-        strapper.addIPativo("10.0.0.20");   //5
+        strapper.addIPativo("10.0.2.20");   //5
         strapper.addIPativo("10.0.11.21");  //11
-        strapper.addIPativo("10.0.3.21");  //11
+        //strapper.addIPativo("10.0.3.21");  //11
 
 
          /*                                 //# nodos para a rede1
@@ -481,8 +483,8 @@ public class Bootstrapper {
 
         //System.out.println("Ligação: " + strapper.wantToSendFile(1,"10.0.4.10", "10.0.3.21"));
         //System.out.println("Ligação: " + strapper.wantToSendFile(1,"10.0.4.10", "10.0.0.20"));
-        System.out.println("Ligação: " + strapper.wantToSendFile(1, "10.0.3.21"));
-        //System.out.println("Ligação: " + strapper.wantToSendFile(1,"10.0.19.1", "10.0.11.21"));
+        System.out.println("Ligação: " + strapper.wantToSendFile(1, "10.0.2.20"));
+        //System.out.println("Ligação: " + strapper.wantToSendFile(1, "10.0.11.21"));
     }
 }
 
