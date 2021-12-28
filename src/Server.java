@@ -131,7 +131,6 @@ public class Server {
          * agora iniciar servidor
          */
         Bootstrapper bootstrapper = new Bootstrapper(path);
-        bootstrapper.parser();
 
         ExecutorService pool = Executors.newCachedThreadPool();
         ServerSocket serverSocket = null;

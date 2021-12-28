@@ -4,19 +4,22 @@ import org.json.simple.*;
 
 import java.io.FileReader;
 import java.io.Reader;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 
 public class Bootstrapper {
 
     private Reader ficheiro;
     private HashMap<String, Integer> nodoID;
-    public HashMap<Integer, String> serverLigacoes;
-    public HashMap<Integer, HashMap> nodos;
-    public HashMap<Integer, HashMap> clientes;
-    public HashMap<Integer, Tuple<Integer,HashMap>> ativos;
+    private HashMap<Integer, String> serverLigacoes;
+    private HashMap<Integer, HashMap> nodos;
+    private HashMap<Integer, HashMap> clientes;
+    private HashMap<Integer, Tuple<Integer,HashMap>> ativos;
     private HashMap<Integer, ArrayList> nodosComFile;
+    private HashMap<Integer, Timestamp> nodosTimeStamp;
 
     //private int Nvizinhos = 2; //Numero de vizinhos que um IP pode ter
     public String serverIP;
@@ -36,7 +39,10 @@ public class Bootstrapper {
         this.nodoID = new HashMap<>();
         this.serverLigacoes = new HashMap<>();
         this.nodosComFile = new HashMap<>();
+        this.nodosTimeStamp = new HashMap<>();
         this.serverIP = "";
+
+        parser();
     }
 
     public HashMap getNodos() {
@@ -48,7 +54,7 @@ public class Bootstrapper {
     }
 
 
-    public void parser(){
+    private void parser(){
         Object obj = JSONValue.parse(ficheiro);
         JSONObject objt = (JSONObject) obj;
         JSONArray nodos = (JSONArray) objt.get("nodos");
@@ -133,7 +139,7 @@ public class Bootstrapper {
                 aux= (String) ip;
             }
         }
-        if(lvl!=level){
+        if(!lvl.equals(level)){
             r.remove(aux);
             r.put(key,level);
         }
@@ -146,7 +152,6 @@ public class Bootstrapper {
         r.put(key,level);
         return r;
     }
-
 
 
     //Auxiar da addTPativo, que irá verificar se um IP já se encontra ativo e se não se encontrar criar um
@@ -210,6 +215,8 @@ public class Bootstrapper {
         return peso;
     }
 
+    //ipOrigem é o server/nodo que vai enviar os ficheiros ipDestino é o que vai receber
+    //ipOrigem é sempre o mesmo, vou avançando com o destino para mais próximo da origem
     private Tuple<String,Integer> bestVizinho( ArrayList<String> vizitados,String ipOrigem, String ipDestino) {
         int pesoOrigem = 0;
         int pesoTotal = 0;
@@ -220,6 +227,8 @@ public class Bootstrapper {
         HashMap <String, Integer> hash = null;
         Tuple<String, Integer> tuplo = null;
         ArrayList<Integer> visitado = new ArrayList<>(getNodoIDarray(vizitados));
+        //System.out.println("O ipdestino: " + ipDestino);
+        //System.out.println("O ipOrigem: s" + ipOrigem);
         int nNodo = nodoID.get(ipDestino);
         int auxNodo;
         boolean flagServer=false;
@@ -244,7 +253,7 @@ public class Bootstrapper {
             //System.out.println("O server está longe");
         }
 
-        //System.out.println(ativos.get(nNodo));
+        //System.out.println("Nodos ativos para o o destino: " + ativos.get(nNodo));
         for(Object key : ativos.get(nNodo).getY().keySet()) {
             auxNodo = nodoID.get(key);
             //System.out.println(ativos.get(auxNodo));
@@ -266,10 +275,11 @@ public class Bootstrapper {
                         }
                     }
                 }else{
+
                     if (ativos.get(auxNodo).getX() == 1) { //só quero que sejam nodos do tipo nodo e não cliente
                         //System.out.println();
-                        //System.out.println("O vizinho tem peso: " + ativos.get(auxNodo).getY());
                         pesoOrigem = getPesoFromAtivos(ativos.get(auxNodo).getY(),ipOrigem);
+                        //System.out.println("merda aqui: " + pesoOrigem);
                     }
                 }
                 //System.out.println(hash.get(ipOrigem));
@@ -360,63 +370,139 @@ public class Bootstrapper {
 
     //Atualiza os nodos que passaram a ter o ficheiro
     private void updateNodosComFile(ArrayList<String> list, Integer fileID){
+        if(!nodosComFile.containsKey(fileID)){
+            ArrayList<Integer> r = new ArrayList<>();
+            for(String value: list){
+                if (!value.equals(serverIP) && !clientes.containsKey(nodoID.get(value)))
+                    r.add(nodoID.get(value));
+            }
+            nodosComFile.put(fileID,r);
+        }else{
+            for(String value : list){
+                Integer nodo = nodoID.get(value);
+                if(!nodosComFile.get(fileID).contains(nodo) && !value.equals(serverIP) && !clientes.containsKey(nodoID.get(value))){
+                    nodosComFile.get(fileID).add(nodo);
+                }
+            }
+        }
+    }
+
+    
+    //atualiza nodosComm file quando um nodo deixa de ter um ficheiro.
+    public void removeNodosComFile(String ip, Integer fileID){
+        if(nodosComFile.containsKey(fileID)){
+            if(nodosComFile.get(fileID).contains(nodoID.get(ip))){
+                nodosComFile.get(fileID).remove(nodoID.get(ip));
+            }
+        }
 
     }
+    public void removeNodoDesativo(String ip){
+        removeNodoDesativoaux(nodoID.get(ip));
+    }
+
+    private void removeNodoDesativoaux(Integer nodo){
+        ativos.remove(nodo); //removo da lista
+        for (Object key: ativos.keySet()){
+            //System.out.println("print da key " + key + " ao remover o nodo: " + nodo);
+            for(Object key1:ativos.get(key).getY().keySet()){
+                //System.out.println("para o nodo " + key + " vejo: " + key1);
+                //System.out.println("merda que falha: " +  ativos.get(key).getY().get(key1));
+                if(nodoID.get(key1).equals(nodo)){
+                    HashMap aux = new HashMap<>(ativos.get(key).getY());
+                    aux.remove(key1);
+                    ativos.put((Integer) key, new Tuple<Integer,HashMap>(ativos.get(key).getX(),aux));
+                }
+            }
+        }
+        //Atualizo o nodosComFile caso esse nodo tenha algum ficheiro
+        for(Object file : nodosComFile.keySet()){
+            if(nodosComFile.get(file).contains(nodo)){
+                nodosComFile.get(file).remove(nodo);
+            }
+        }
+    }
+
+    private void checkTimeStamps(){
+        for(Object key:nodosTimeStamp.keySet()){
+            if(new Date().getTime()-nodosTimeStamp.get((key)).getTime()>=12000){ //caducado
+                removeNodoDesativoaux((Integer) key);
+            }
+        }
+    }
+    
 
     public ArrayList<String> wantToSendFile(Integer fileID, String nodoDestino){
         Tuple <Integer,ArrayList<String>> r = null;
         Tuple <Integer,ArrayList<String>> aux;
 
-        if(nodosComFile.containsKey(fileID)){
+        if(nodosComFile.containsKey(fileID) && !nodosComFile.get(fileID).isEmpty()){
             //Já existem nodos com o ficheiro
+            String origem="";
             for(Object key:nodosComFile.get(fileID)){
-                aux = new Tuple<>(bestRoute((String) key, nodoDestino));
-                if(r.getX()==null || r.getX()> aux.getX()){
+
+                //System.out.println("PROBLEMA:");
+                //System.out.println("Entra no IF:" +clientes.containsKey(nodoID.get(nodoDestino)));
+                if(clientes.containsKey(nodoID.get(nodoDestino))){ //IPs que o ipDestino consegue alcançar
+                    for(Object skey: clientes.get(nodoID.get(nodoDestino)).keySet()){
+                        //System.out.println("Vou testar: " + skey);
+                        //System.out.println("Se " + skey + " pertencer ao mesmo nodo que key: " + key);
+                        if(!skey.equals(serverIP) && nodoID.get((String) skey).equals(key)){
+                            origem = (String) skey;
+                            //System.out.println("IP de origem: " + skey);
+                        }
+                    }
+                }
+                aux = new Tuple<>(bestRoute(origem, nodoDestino));
+                if(r==null || r.getX()> aux.getX()){
+                    //if(r!=null)
+                    //    System.out.println("Este caminho anterio: " + r.getY());
+                    //System.out.println("Este caminho é melhor que o anterio: " + aux.getY() + "pois tem peso: " + aux.getX());
                     r=new Tuple<>(aux);
                 }
             }
             //Ver se é melhor ir buscar a esses nodos
             // ou ir ao servidor
             aux = new Tuple<>(bestRoute(serverIP, nodoDestino));
-            if(aux.getX()> r.getX()){
+            if(r!=null && aux.getX()< r.getX()){
                 r = new Tuple<>(aux);
             }
         }else{
             //Não existem nodos com o ficheiro logo vai ao servidor
             r = new Tuple<>(bestRoute(serverIP, nodoDestino));
         }
+        updateNodosComFile(r.getY(),fileID);
         return listToSend(r.getY());
-        //return r.getY();
     }
 
 
     //Tenho de ver o que vou returnar, pode dar jeito returnar IPS que sofreram alterações para os informar
     public void addIPativo(String ip){
-        HashMap aux;
         Integer nIP = nodoID.get(ip);
 
         if(this.ativos.containsKey(nIP)){
             //timestamp
+            java.util.Date date = new java.util.Date();
+            nodosTimeStamp.put(nIP, new Timestamp(date.getTime()));
+            checkTimeStamps();
             System.out.println("Já era ativo, mesma hash: "+ativos);
         }else{ //ip ainda não estava ativo
 
             //VER SE ESSE IP TEM IPS VIZINHOS ATIVOS
             if(this.nodos.containsKey(nIP)){
                 //é um IP de um nodo
-                aux =new HashMap(this.nodos.get(nIP)); //retorna um hashmap das possiveis ligações do ip
-
-                //Já tenho lista de vizinho è adicionar aos vizinhos
-                ativos.put(nIP, new Tuple(1,vizinhosAtivosArray(aux)));
-
+                //Vou ver quais os vizinhos a diciona-los ao tuplo
+                ativos.put(nIP, new Tuple(1,vizinhosAtivosArray(nodos.get(nIP))));
+                
             }else
             if(this.clientes.containsKey(nIP)){
-                //ver se esse ip tem ips vizinho ativos
-                //é um IP de um nodo
-                aux =new HashMap(this.clientes.get(nIP)); //retorna um hashmap das possiveis ligações do ip
-
-                //Já tenho lista de vizinho è adicionar aos vizinhos
-                ativos.put(nIP, new Tuple(0,vizinhosAtivosArray(aux)));
+                //é um IP de um cliente
+                //Vou ver quais os vizinhos a diciona-los ao tuplo
+                ativos.put(nIP, new Tuple(0,vizinhosAtivosArray(clientes.get(nIP))));
             }
+            //Atualiza timestamps
+            java.util.Date date = new java.util.Date();
+            nodosTimeStamp.put(nIP, new Timestamp(date.getTime()));
             //ATUALIZAR OS RESTANTES IPS ATIVOS PARA SABEREM DO NOVO NODO
             for(Object key: ativos.keySet()){
                 //System.out.println("key:" + key + " é nó? " + ativos.get(key).getX());
@@ -424,7 +510,7 @@ public class Bootstrapper {
                     //System.out.println("nodo: " + nodos.get(key) + " o ip q quero " + ip);
                     String nodoIP = containsIPNodo(nodos.get(key),ip);
                     //System.out.println("IP pertence a nodo " + nodoIP);
-                    if(nodoIP != ""){
+                    if(!nodoIP.equals("")){
                         //System.out.println("Vai atualizar ativos");
                         //if(ativos.get(key).getY().size()<Nvizinhos){
                         ativos.get(key).getY().put(nodoIP, nodos.get(key).get(nodoIP));
@@ -436,13 +522,12 @@ public class Bootstrapper {
             }
             System.out.println("Nova hash de ativos: "+ativos);
         }
-        //System.out.println("Depois de addicionar "+ativos);
     }
 
     public static void main(String[] args) {
         System.out.println(args[0]);
         Bootstrapper strapper = new Bootstrapper(args[0]);
-        strapper.parser();
+        //strapper.parser();
 
         System.out.println("Main print");
         System.out.println("Server:");
@@ -454,10 +539,10 @@ public class Bootstrapper {
 
         //Para a rede
         strapper.addIPativo("10.0.4.1");   //2
-        //strapper.addIPativo("10.0.5.2");   //3
+        strapper.addIPativo("10.0.5.2");   //3
         strapper.addIPativo("10.0.18.1");  //7
         strapper.addIPativo("10.0.16.1");  //6
-        strapper.addIPativo("10.0.13.1");  //5
+        //strapper.addIPativo("10.0.13.1");  //5
         strapper.addIPativo("10.0.0.20");  //11
 
         strapper.addIPativo("10.0.2.20");   //5
@@ -483,8 +568,17 @@ public class Bootstrapper {
 
         //System.out.println("Ligação: " + strapper.wantToSendFile(1,"10.0.4.10", "10.0.3.21"));
         //System.out.println("Ligação: " + strapper.wantToSendFile(1,"10.0.4.10", "10.0.0.20"));
-        System.out.println("Ligação: " + strapper.wantToSendFile(1, "10.0.2.20"));
-        //System.out.println("Ligação: " + strapper.wantToSendFile(1, "10.0.11.21"));
+        System.out.println("Ligação: " + strapper.wantToSendFile(1, "10.0.0.20"));
+        System.out.println("FILES COM O ID: " + strapper.nodosComFile);
+        System.out.println("Ligação: " + strapper.wantToSendFile(1, "10.0.11.21"));
+        strapper.removeNodoDesativo("10.0.5.2");
+        System.out.println("Ativos: \n" + strapper.ativos);
+        //strapper.removeNodosComFile("10.0.5.2",1);
+        strapper.removeNodosComFile("10.0.4.1",1);
+        System.out.println("FILES COM O ID: " + strapper.nodosComFile);
+        System.out.println("Ligação: " + strapper.wantToSendFile(1, "10.0.0.20"));
+        System.out.println("Ligação: " + strapper.wantToSendFile(1, "10.0.11.21"));
+        System.out.println("FILES COM O ID: " + strapper.nodosComFile);
     }
 }
 
