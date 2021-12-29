@@ -25,7 +25,6 @@ public class Bootstrapper {
     public Bootstrapper(String file){
         try {
             this.ficheiro = new FileReader(file);
-            System.out.println(ficheiro);
         }catch (Exception e){
             e.getStackTrace();
         }
