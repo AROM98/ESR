@@ -174,12 +174,10 @@ public class Bootstrapper {
         String vizinho = "";
         HashMap <String, Integer> hash = null;
         ArrayList<Integer> visitado = new ArrayList<>(getNodoIDarray(vizitados));
-        //System.out.println("O ipdestino: " + ipDestino);
-        //System.out.println("O ipOrigem: s" + ipOrigem);
         int nNodo = nodoID.get(ipDestino);
         int auxNodo;
         boolean flagServer=false;
-        //System.out.println("Entra if: " + ativos.containsKey(nNodo));
+
 
         if(ipOrigem.equals(serverIP)){
             flagServer=true;
@@ -192,21 +190,19 @@ public class Bootstrapper {
         }
 
         if(flagServer){  //se for logo o vizinho a origem
-            //System.out.println("O IP: " + ipDestino +"não tem: " + ipOrigem +"? " + hash.get(ipOrigem));
-            if(hash.get(ipOrigem)==1){
 
+            if(hash.get(ipOrigem)==1){
                 return new Tuple<>(ipOrigem,1);
             }
-            //System.out.println("O server está longe");
+
         }
 
-        //System.out.println("Nodos ativos para o o destino: " + ativos.get(nNodo));
+
         for(Object key : ativos.get(nNodo).getY().keySet()) {
             auxNodo = nodoID.get(key);
-            //System.out.println(ativos.get(auxNodo));
-            //System.out.println("O caralho do visitado "+visitado);
+
             if (!visitado.contains(auxNodo)) {
-                //System.out.println("Ainda não foi visitado");
+
                 if (key.equals(ipOrigem) && (Integer) ativos.get(nNodo).getY().get(key) == 1) {  //caso super especifico
                     return new Tuple<>(ipOrigem, 1);
                 }
@@ -224,39 +220,27 @@ public class Bootstrapper {
                 }else{
 
                     if (ativos.get(auxNodo).getX() == 1) { //só quero que sejam nodos do tipo nodo e não cliente
-                        //System.out.println();
                         pesoOrigem = getPesoFromAtivos(ativos.get(auxNodo).getY(),ipOrigem);
-                        //System.out.println("merda aqui: " + pesoOrigem);
                     }
                 }
-                //System.out.println(hash.get(ipOrigem));
+
                 pesoTotal = pesoVizinho + pesoOrigem;
-                //System.out.println("O vizinho tem peso: " + pesoVizinho + " peso origem " + pesoOrigem);
-                //System.out.println("O pesoTotal tem peso: " + pesoTotal + " Para a key: " + key);
-                //System.out.println("O pesoFinal " + pesoFinal + " >= " + pesoTotal + " pesoTotal");
-                //System.out.println("O pesoVizinhoAtual " + pesoVizinhoAux + " >= " + pesoVizinho + " peso Do possivel vizinho");
+
                 if (((pesoFinal >= pesoTotal && pesoVizinhoAux >= pesoVizinho && ativos.get(auxNodo).getX() == 1) || (pesoFinal > pesoTotal && pesoVizinhoAux < pesoVizinho)&& ativos.get(auxNodo).getX() == 1) ) {  //
                     pesoFinal = pesoTotal;
                     pesoVizinhoAux = pesoVizinho;
                     vizinho = (String) key;
-                    //System.out.println("Novo Vizinho: " + vizinho);
-                }//else
-                //System.out.println("não foi adicionado: " + key );
-            } //else
-            //System.out.println("já foi visitado");
+                }
+            }
         }
         //por fim
         if (flagServer) {  //se for logo o vizinho a origem
             if ((Integer) hash.get(ipOrigem) < pesoVizinhoAux) {
-                //System.out.println("o ip tanga xD: " + ipOrigem);
-                //System.out.println(hash);
-                //System.out.println("Tanga do caralho:\n peso na hash: " + hash.get(ipOrigem) + " O pesoTotal: " + pesoTotal);
 
                 return new Tuple<>(ipOrigem, 1);
             }
         } else {
             if (getPesoFromAtivos(ativos.get(nNodo).getY(),ipOrigem) < pesoOrigem) {  //caso super especifico
-                //System.out.println("Tanga do caralho2:\n peso na hash: " + ativos.get(nNodo).getY().get(ipOrigem) + " O pesoTotal: " + pesoTotal);
 
                 return new Tuple<>(ipOrigem, 1);
             }
@@ -389,23 +373,16 @@ public class Bootstrapper {
             String origem="";
             for(Object key:nodosComFile.get(fileID)){
 
-                //System.out.println("PROBLEMA:");
-                //System.out.println("Entra no IF:" +clientes.containsKey(nodoID.get(nodoDestino)));
                 if(clientes.containsKey(nodoID.get(nodoDestino))){ //IPs que o ipDestino consegue alcançar
                     for(Object skey: clientes.get(nodoID.get(nodoDestino)).keySet()){
-                        //System.out.println("Vou testar: " + skey);
-                        //System.out.println("Se " + skey + " pertencer ao mesmo nodo que key: " + key);
+
                         if(!skey.equals(serverIP) && nodoID.get((String) skey).equals(key)){
                             origem = (String) skey;
-                            //System.out.println("IP de origem: " + skey);
                         }
                     }
                 }
                 aux = new Tuple<>(bestRoute(origem, nodoDestino));
                 if(r==null || r.getX()> aux.getX()){
-                    //if(r!=null)
-                    //    System.out.println("Este caminho anterio: " + r.getY());
-                    //System.out.println("Este caminho é melhor que o anterio: " + aux.getY() + "pois tem peso: " + aux.getX());
                     r=new Tuple<>(aux);
                 }
             }
@@ -479,6 +456,7 @@ public class Bootstrapper {
         System.out.println(strapper.clientes);
 
         //Para a rede
+        /*
         strapper.addIPativo("10.0.4.1");   //2
         strapper.addIPativo("10.0.5.2");   //3
         strapper.addIPativo("10.0.18.1");  //7
@@ -489,26 +467,24 @@ public class Bootstrapper {
         strapper.addIPativo("10.0.2.20");   //5
         strapper.addIPativo("10.0.11.21");  //11
         //strapper.addIPativo("10.0.3.21");  //11
-
-
-         /*                                 //# nodos para a rede1
-        strapper.addIPativo("10.0.7.1");  //0
-        strapper.addIPativo("10.0.10.1"); //não existe
-        strapper.addIPativo("10.0.1.1");  //0
-        strapper.addIPativo("10.0.4.2");  //2
-        strapper.addIPativo("10.0.7.2");  //1
-        strapper.addIPativo("10.0.2.2");  //3
-
 */
+
+                                          //# nodos para a rede1
+        //strapper.addIPativo("10.0.3.20");  //cliente
+        strapper.addIPativo("10.0.10.1"); //não existe
+        strapper.addIPativo("10.0.1.1");  //1
+        //strapper.addIPativo("10.0.4.2");  //3
+        //strapper.addIPativo("10.0.7.2");  //2
+        strapper.addIPativo("10.0.2.2");  //4
+        strapper.addIPativo("10.0.9.20");  //cliente
+
+
         System.out.println("\nNodosID" + strapper.nodoID + "\n");
 
         System.out.println("Ativos: \n" + strapper.ativos);
-
-        //System.out.println(strapper.getFilesToSend() + "\n");
-        //strapper.getVizinhos(strapper.getFilesToSend().get("10.0.8.2"));
-
-        //System.out.println("Ligação: " + strapper.wantToSendFile(1,"10.0.4.10", "10.0.3.21"));
-        //System.out.println("Ligação: " + strapper.wantToSendFile(1,"10.0.4.10", "10.0.0.20"));
+        strapper.addIPativo("10.0.7.2");  //2
+        System.out.println("Ativos: \n" + strapper.ativos);
+        /*
         System.out.println("Ligação: " + strapper.wantToSendFile(1, "10.0.0.20"));
         System.out.println("FILES COM O ID: " + strapper.nodosComFile);
         System.out.println("Ligação: " + strapper.wantToSendFile(1, "10.0.11.21"));
@@ -520,6 +496,7 @@ public class Bootstrapper {
         System.out.println("Ligação: " + strapper.wantToSendFile(1, "10.0.0.20"));
         System.out.println("Ligação: " + strapper.wantToSendFile(1, "10.0.11.21"));
         System.out.println("FILES COM O ID: " + strapper.nodosComFile);
+         */
     }
 }
 
