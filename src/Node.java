@@ -1,8 +1,6 @@
-import java.io.*;
-
 public class Node{
 
-    public static void main(String[] args) throws IOException{
+    public static void main(String[] args){
 
         String server = "";
         String nodeIp = "";

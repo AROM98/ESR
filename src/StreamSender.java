@@ -5,7 +5,7 @@
    colocar primeiro o cliente a correr, porque este dispara logo
    ---------------------- */
 
-import java.io.*;
+
 import java.net.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -23,7 +23,7 @@ public class StreamSender extends JFrame implements ActionListener {
     //----------------
     DatagramPacket senddp; //UDP packet containing the video frames (to send)A
     DatagramSocket RTPsocket; //socket to be used to send and receive UDP packet
-    int RTP_dest_port = 25000; //destination port for RTP packets
+    int RTP_dest_port; //destination port for RTP packets
     InetAddress ClientIPAddr; //Client IP address
 
     static String VideoFileName; //video file to request to the server
@@ -111,10 +111,11 @@ public class StreamSender extends JFrame implements ActionListener {
                 //send the packet as a DatagramPacket over the UDP socket
                 senddp = new DatagramPacket(packet_bits, packet_length, ClientIPAddr, RTP_dest_port);
                 RTPsocket.send(senddp);
-/*
-                System.out.println("Send frame #"+imagenb);
+
+
+                //System.out.println("Send frame #"+imagenb);
                 //print the header bitstream
-                rtp_packet.printheader();*/
+                //rtp_packet.printheader();
 
                 //update GUI
                 //label.setText("Send frame #" + imagenb);

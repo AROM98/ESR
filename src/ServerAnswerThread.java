@@ -6,7 +6,6 @@ import java.util.HashMap;
 
 public class ServerAnswerThread implements Runnable{
 
-
     private Bootstrapper bootstrapper;
     private byte[] dados;
     private int porta;
@@ -27,9 +26,6 @@ public class ServerAnswerThread implements Runnable{
     }
 
     public void run() {
-
-
-
 
         int flag;
         String ipNode;
@@ -96,11 +92,6 @@ public class ServerAnswerThread implements Runnable{
                 trajeto.clear();
 
                 break;
-
-            case 4:
-                //acabar ligação (...) (ambos sentidos)
-
-                break;
             case 5:
                 int port_to_close = Integer.parseInt(res[1]);
                 portas.put(port_to_close, 0); // porta passa a estar desactivada
@@ -111,6 +102,7 @@ public class ServerAnswerThread implements Runnable{
                 //6-> nodo apaga ficheiro da cache (nodo -> servidor)
                 // vou atualizar informação no bootstrapper --
                 // "o que vou querer é o IP de quem apagou da cache e o id do file"
+
                 //String ficheiroo = res[1];
                 //ipNode = res[2];
                 //bootstrapper.removeNodosComFile(ipNode, ficheiros.get(ficheiroo));

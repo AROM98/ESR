@@ -1,0 +1,18 @@
+compile project: javac -cp .:lib/json-simple-1.1.1.jar *.java
+
+
+su - $user
+cd ESR/ESR/src && export DISPLAY=:0.0
+
+
+O1-servidor: java -cp .:lib/json-simple-1.1.1.jar Server files.txt
+O2-n10: java Node 10.0.4.10 2 10.0.4.1
+O3-n9: java Node 10.0.4.10 2 10.0.5.2
+O5-n2: java Node 10.0.4.10 2 10.0.12.2
+O6-n1: java Node 10.0.4.10 2 10.0.16.1
+O7-n7: java Node 10.0.4.10 2 10.0.18.1
+O8-n22: java Node 10.0.4.10 1 10.0.3.21
+O9-n19: java Node 10.0.4.10 1 10.0.2.20
+O10-n18: java Node 10.0.4.10 1 10.0.0.20
+O11-n17: java Node 10.0.4.10 1 10.0.0.21
+O4-n23: java Node 10.0.4.10 1 10.0.11.20
