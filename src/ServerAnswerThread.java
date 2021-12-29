@@ -111,7 +111,9 @@ public class ServerAnswerThread implements Runnable{
                 //6-> nodo apaga ficheiro da cache (nodo -> servidor)
                 // vou atualizar informação no bootstrapper --
                 // "o que vou querer é o IP de quem apagou da cache e o id do file"
-
+                //String ficheiroo = res[1];
+                //ipNode = res[2];
+                //bootstrapper.removeNodosComFile(ipNode, ficheiros.get(ficheiroo));
                 break;
 
             default:
