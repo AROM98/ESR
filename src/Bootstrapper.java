@@ -367,7 +367,9 @@ public class Bootstrapper {
         Tuple <Integer,ArrayList<String>> r = null;
         Tuple <Integer,ArrayList<String>> aux;
 
-        if(nodosComFile.containsKey(fileID) && !nodosComFile.get(fileID).isEmpty()){
+        if(nodosComFile.containsKey(fileID) && !nodosComFile.get(fileID).isEmpty() && 1==0){ // Funciona mas não foi implementado no resto do trabalho
+                                                                                    // foi adicionado 1==0 para falhar
+
             //Já existem nodos com o ficheiro
             String origem="";
             for(Object key:nodosComFile.get(fileID)){
@@ -395,7 +397,7 @@ public class Bootstrapper {
             //Não existem nodos com o ficheiro logo vai ao servidor
             r = new Tuple<>(bestRoute(serverIP, nodoDestino));
         }
-        updateNodosComFile(r.getY(),fileID);
+        //updateNodosComFile(r.getY(),fileID);  // Funciona pela mesma razão a cima não foi implementado no resto do trabalho
         return listToSend(r.getY());
     }
 
